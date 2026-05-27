@@ -8,21 +8,42 @@
       name="description"
       content="Interactive dashboard for Aytza health M&A acquirer classification and acquisition rationale analysis."
     />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Covered+By+Your+Grace&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
     <style>
+      @font-face {
+        font-family: "Proximanova";
+        src: url("https://cdn.prod.website-files.com/690d21cbc63c12f4ce034f2f/690e538af556acbd20e9426f_ProximaNova-Regular.ttf") format("truetype");
+        font-weight: 400;
+        font-style: normal;
+        font-display: swap;
+      }
+
+      @font-face {
+        font-family: "Proximanova";
+        src: url("https://cdn.prod.website-files.com/690d21cbc63c12f4ce034f2f/690e538a6076b2732ba0492d_ProximaNova-Bold.ttf") format("truetype");
+        font-weight: 700;
+        font-style: normal;
+        font-display: swap;
+      }
+
       :root {
         color-scheme: light;
-        --ink: #17202a;
-        --muted: #607080;
-        --line: #dce3e8;
-        --soft: #f4f7f9;
-        --panel: #ffffff;
-        --navy: #19324d;
-        --blue: #2b6cb0;
-        --teal: #2f8f83;
-        --green: #5b8c3a;
-        --gold: #b98222;
-        --red: #b54b4b;
-        --shadow: 0 18px 45px rgba(25, 50, 77, 0.12);
+        --ink: #000000;
+        --muted: #616161;
+        --line: #1e1503;
+        --soft: #f1f0ee;
+        --panel: #fffdfb;
+        --cream: #fbf7f4;
+        --purple: #6d275d;
+        --orange: #f2a51b;
+        --teal: #05878a;
+        --blue: #4259a0;
+        --light-purple: #c281d1;
+        --dark-purple: #1e1503;
+        --red: #b42318;
+        --shadow: 8px 8px 0 rgba(109, 39, 93, 0.14);
       }
 
       * {
@@ -31,14 +52,14 @@
 
       body {
         margin: 0;
-        background: #eef3f6;
+        background: var(--cream);
         color: var(--ink);
-        font: 14px/1.45 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        font: 14px/1.45 "Proximanova", Arial, sans-serif;
         overflow-x: hidden;
       }
 
       a {
-        color: var(--blue);
+        color: var(--purple);
         text-decoration: none;
       }
 
@@ -51,44 +72,83 @@
       }
 
       header {
-        background: var(--navy);
-        color: #fff;
-        padding: 24px clamp(18px, 3vw, 36px);
+        background: var(--cream);
+        color: var(--ink);
+        padding: 26px clamp(18px, 3vw, 36px) 28px;
+        border-bottom: 20px solid var(--orange);
       }
 
       .header-inner {
         display: flex;
-        align-items: flex-end;
+        align-items: flex-start;
         justify-content: space-between;
         gap: 24px;
         max-width: 1440px;
         margin: 0 auto;
       }
 
+      .brand-row {
+        display: flex;
+        align-items: center;
+        gap: 18px;
+        margin-bottom: 34px;
+      }
+
+      .brand-logo {
+        display: block;
+        width: 92px;
+        height: auto;
+      }
+
+      .eyebrow {
+        color: var(--purple);
+        font-family: "Covered By Your Grace", cursive;
+        font-size: 24px;
+        line-height: 1;
+      }
+
       h1 {
         margin: 0;
-        font-size: clamp(24px, 3vw, 40px);
+        font-family: "Outfit", sans-serif;
+        font-size: clamp(32px, 4vw, 58px);
         line-height: 1.05;
         letter-spacing: 0;
+        font-weight: 800;
+        max-width: 780px;
+      }
+
+      .accent-script {
+        color: var(--purple);
+        font-family: "Covered By Your Grace", cursive;
+        font-weight: 400;
+        white-space: nowrap;
       }
 
       .subtitle {
-        margin: 8px 0 0;
-        color: #c8d7e3;
-        max-width: 760px;
+        margin: 12px 0 0;
+        color: var(--dark-purple);
+        max-width: 680px;
+        font-size: 18px;
         overflow-wrap: anywhere;
       }
 
       .header-meta {
         text-align: right;
-        color: #c8d7e3;
+        color: var(--muted);
         white-space: nowrap;
         overflow-wrap: anywhere;
+        padding-top: 8px;
       }
 
       .header-meta a {
-        color: #fff;
+        display: inline-block;
+        margin-top: 8px;
+        background: var(--orange);
+        border: 1px solid var(--ink);
+        border-radius: 999px;
+        color: var(--ink);
         font-weight: 700;
+        padding: 8px 14px;
       }
 
       main {
@@ -107,9 +167,9 @@
       .kpi {
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 0;
         padding: 14px;
-        box-shadow: 0 1px 0 rgba(25, 50, 77, 0.04);
+        box-shadow: 4px 4px 0 rgba(109, 39, 93, 0.11);
         min-height: 96px;
       }
 
@@ -121,7 +181,8 @@
 
       .kpi .value {
         font-size: clamp(24px, 3vw, 34px);
-        font-weight: 750;
+        font-family: "Outfit", sans-serif;
+        font-weight: 800;
         margin-top: 8px;
         line-height: 1;
       }
@@ -139,7 +200,7 @@
         align-items: end;
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 0;
         padding: 14px;
         margin-bottom: 18px;
         box-shadow: var(--shadow);
@@ -158,7 +219,7 @@
         width: 100%;
         min-height: 38px;
         border: 1px solid var(--line);
-        border-radius: 6px;
+        border-radius: 0;
         background: #fff;
         color: var(--ink);
         font: inherit;
@@ -172,13 +233,14 @@
       button {
         padding: 8px 12px;
         cursor: pointer;
-        font-weight: 650;
+        font-weight: 700;
       }
 
       .primary {
-        background: var(--navy);
-        color: #fff;
-        border-color: var(--navy);
+        background: var(--orange);
+        color: var(--ink);
+        border-color: var(--ink);
+        border-radius: 999px;
       }
 
       .grid {
@@ -204,8 +266,8 @@
       .panel {
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 8px;
-        box-shadow: 0 1px 0 rgba(25, 50, 77, 0.04);
+        border-radius: 0;
+        box-shadow: 4px 4px 0 rgba(109, 39, 93, 0.1);
         min-height: 320px;
       }
 
@@ -220,7 +282,9 @@
       .panel h2 {
         margin: 0;
         padding: 14px 16px 8px;
+        font-family: "Outfit", sans-serif;
         font-size: 16px;
+        font-weight: 800;
         letter-spacing: 0;
       }
 
@@ -281,7 +345,7 @@
       }
 
       .sankey-chart {
-        min-height: 575px;
+        min-height: 665px;
       }
 
       .sankey-chart svg {
@@ -311,15 +375,15 @@
 
       .quadrant {
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 0;
         padding: 12px;
         min-height: 150px;
-        background: #fbfcfd;
+        background: #fff;
       }
 
       .quadrant.strong {
-        background: #f1f8f6;
-        border-color: #c4ded8;
+        background: #f9eff6;
+        border-color: var(--purple);
       }
 
       .quadrant-title {
@@ -329,6 +393,7 @@
 
       .quadrant-count {
         font-size: 28px;
+        font-family: "Outfit", sans-serif;
         font-weight: 800;
         line-height: 1;
       }
@@ -344,8 +409,8 @@
         margin-top: 9px;
         border-radius: 999px;
         padding: 3px 8px;
-        background: #e8eef5;
-        color: var(--navy);
+        background: #f9eff6;
+        color: var(--purple);
         font-size: 12px;
         max-width: 100%;
         overflow: hidden;
@@ -362,7 +427,7 @@
       .table-wrap {
         background: var(--panel);
         border: 1px solid var(--line);
-        border-radius: 8px;
+        border-radius: 0;
         overflow: hidden;
         box-shadow: var(--shadow);
       }
@@ -386,7 +451,7 @@
 
       table {
         width: 100%;
-        min-width: 1060px;
+        min-width: 1240px;
         border-collapse: collapse;
         table-layout: fixed;
       }
@@ -402,7 +467,7 @@
       th {
         position: sticky;
         top: 0;
-        background: #f8fafb;
+        background: var(--cream);
         z-index: 2;
         font-size: 12px;
         color: var(--muted);
@@ -414,7 +479,7 @@
       }
 
       tbody tr:hover td {
-        background: #f6fbff;
+        background: #f9eff6;
       }
 
       .table-scroll {
@@ -428,8 +493,8 @@
         padding: 3px 8px;
         font-size: 12px;
         font-weight: 650;
-        background: #e8eef5;
-        color: var(--navy);
+        background: #f9eff6;
+        color: var(--purple);
         max-width: 100%;
         white-space: nowrap;
         overflow: hidden;
@@ -437,23 +502,23 @@
       }
 
       .pill.health-tech {
-        background: #dff4f1;
-        color: #17675f;
+        background: #e7f3f3;
+        color: var(--teal);
       }
 
       .pill.incumbent {
-        background: #e8f1dc;
-        color: #4f7026;
+        background: #fff2d2;
+        color: #7c5300;
       }
 
       .pill.pe {
-        background: #f6ead3;
-        color: #7a5212;
+        background: #f1e2f6;
+        color: var(--purple);
       }
 
       .pill.other {
-        background: #f1e5e5;
-        color: #8c3232;
+        background: #eee;
+        color: var(--dark-purple);
       }
 
       .muted {
@@ -461,7 +526,7 @@
       }
 
       .quote {
-        color: #2b3742;
+        color: var(--dark-purple);
         display: -webkit-box;
         -webkit-line-clamp: 3;
         -webkit-box-orient: vertical;
@@ -520,8 +585,18 @@
         }
 
         .subtitle,
-        .header-meta {
+        .header-meta,
+        h1 {
           max-width: min(100%, 280px);
+        }
+
+        h1 {
+          font-size: 30px;
+        }
+
+        .brand-row {
+          gap: 14px;
+          margin-bottom: 26px;
         }
 
         .header-meta {
@@ -555,7 +630,11 @@
       <header>
         <div class="header-inner">
           <div>
-            <h1>Aytza M&A Rationale Dashboard</h1>
+            <div class="brand-row">
+              <img src="assets/aytza-logo.svg" alt="Aytza" class="brand-logo" />
+              <div class="eyebrow">purpose-built AI</div>
+            </div>
+            <h1>M&A rationale dashboard for <span class="accent-script">what's next</span> in healthcare.</h1>
             <p class="subtitle">
               Health M&A acquirer taxonomy, source-backed acquisition rationale, and review flags from the 2025-2026 analysis workbook.
             </p>
@@ -659,7 +738,7 @@
         <section class="insight-grid" aria-label="Strategic views">
           <article class="panel sankey-panel">
             <div class="panel-title-row">
-              <h2>Buyer Segment to Rationale Flow</h2>
+              <h2>Buyer Segment to Product Expansion Type</h2>
               <select id="sankeyMetric" class="compact-select" aria-label="Sankey metric">
                 <option value="count">Deal count</option>
                 <option value="value">Disclosed value</option>
@@ -677,7 +756,7 @@
             </div>
           </article>
           <article class="panel">
-            <h2>Product Capability Sub-themes</h2>
+            <h2>Product Expansion Taxonomy</h2>
             <div class="panel-body">
               <div id="productBars" class="bars"></div>
             </div>
@@ -698,6 +777,7 @@
                   <th style="width: 150px">Type</th>
                   <th style="width: 108px">Segment</th>
                   <th style="width: 145px">Rationale</th>
+                  <th style="width: 180px">Product Expansion</th>
                   <th>Theme / quote</th>
                   <th style="width: 160px">Source</th>
                   <th style="width: 80px">QA</th>
@@ -718,7 +798,7 @@
     <script>
       const payload = window.MNA_DASHBOARD_DATA;
       const allRows = payload.rows;
-      const colors = ["#2b6cb0", "#2f8f83", "#b98222", "#b54b4b", "#556b8e", "#7a6cbd"];
+      const colors = ["#6d275d", "#05878a", "#f2a51b", "#4259a0", "#c281d1", "#1e1503"];
       const state = {
         search: "",
         rollup: "all",
@@ -823,7 +903,7 @@
         renderRollupChart(rows);
         renderBars("typeBars", countBy(rows, "acquirerType").slice(0, 12), colors[0]);
         renderBars("rationaleBars", countBy(rows, "rationaleLabels", true).slice(0, 8), colors[1]);
-        renderBars("productBars", countBy(rows.filter((row) => row.productCapabilitySubtheme !== "Not product/capability"), "productCapabilitySubtheme").slice(0, 9), colors[2]);
+        renderBars("productBars", countBy(rows.filter((row) => row.productExpansionType !== "Not product expansion"), "productExpansionType").slice(0, 10), colors[2]);
         renderSankey(rows);
         renderMotionMatrix(rows);
         renderTable(rows);
@@ -872,12 +952,12 @@
         ctx.arc(cx, cy, radius * 0.55, 0, Math.PI * 2);
         ctx.fillStyle = "#fff";
         ctx.fill();
-        ctx.fillStyle = "#17202a";
-        ctx.font = "700 22px system-ui";
+        ctx.fillStyle = "#1e1503";
+        ctx.font = "800 22px Outfit, system-ui";
         ctx.textAlign = "center";
         ctx.fillText(fmtInt(total), cx, cy - 2);
-        ctx.font = "12px system-ui";
-        ctx.fillStyle = "#607080";
+        ctx.font = "12px Proximanova, Arial";
+        ctx.fillStyle = "#616161";
         ctx.fillText("deals", cx, cy + 17);
 
         ctx.textAlign = "left";
@@ -886,11 +966,11 @@
           const y = 54 + index * 34;
           ctx.fillStyle = colors[index % colors.length];
           ctx.fillRect(x, y - 10, 13, 13);
-          ctx.fillStyle = "#17202a";
-          ctx.font = "650 13px system-ui";
+          ctx.fillStyle = "#1e1503";
+          ctx.font = "700 13px Proximanova, Arial";
           ctx.fillText(label, x + 22, y);
-          ctx.fillStyle = "#607080";
-          ctx.font = "12px system-ui";
+          ctx.fillStyle = "#616161";
+          ctx.font = "12px Proximanova, Arial";
           ctx.fillText(`${fmtInt(value)} (${Math.round((value / total) * 100)}%)`, x + 22, y + 16);
         });
       }
@@ -910,19 +990,34 @@
         return colorMap[label] || colors[4];
       }
 
+      function productColor(label) {
+        const palette = {
+          "Care Delivery & Patient Access": "#05878a",
+          "Diagnostics, Imaging & Lab Testing": "#4259a0",
+          "Provider Workflow & Admin Infrastructure": "#6d275d",
+          "Life Sciences R&D & Evidence": "#c281d1",
+          "Medical Devices, Procedures & Simulation": "#f2a51b",
+          "Therapeutics & Disease Management": "#1e1503",
+          "Medication, Pharmacy & Benefits Management": "#bb4198",
+          "AI, Data & Analytics Infrastructure": "#526fc8",
+          "Consumer Engagement & Wellness": "#d9b0df",
+          "Platform / Suite Consolidation": "#616161",
+          "Other Product Expansion": "#aaa",
+        };
+        return palette[label] || colors[4];
+      }
+
       function renderSankey(rows) {
         const chart = byId("sankeyChart");
         const flowsByKey = new Map();
-        for (const row of rows) {
+        const productRows = rows.filter((row) => row.productExpansionType && row.productExpansionType !== "Not product expansion");
+        for (const row of productRows) {
           const weight = state.sankeyMetric === "value" ? Number(row.dealSize || 0) : 1;
           if (!weight) continue;
           const source = row.acquirerCategory || "Other";
-          const targets = row.rationaleLabels && row.rationaleLabels.length ? row.rationaleLabels : ["other/unclear"];
-          const share = weight / targets.length;
-          for (const target of targets) {
-            const key = `${source}||${target}`;
-            flowsByKey.set(key, (flowsByKey.get(key) || 0) + share);
-          }
+          const target = row.productExpansionType || "Other Product Expansion";
+          const key = `${source}||${target}`;
+          flowsByKey.set(key, (flowsByKey.get(key) || 0) + weight);
         }
 
         const flows = [...flowsByKey.entries()].map(([key, value]) => {
@@ -930,12 +1025,12 @@
           return { source, target, value };
         });
         if (!flows.length) {
-          chart.innerHTML = `<div class="sankey-empty">No disclosed value in the current filter.</div>`;
+          chart.innerHTML = `<div class="sankey-empty">No product expansion rows in the current filter.</div>`;
           return;
         }
 
         const segmentOrder = ["Health Tech", "Incumbent", "PE", "Other"];
-        const rationaleOrder = ["product/capability expansion", "geographic expansion", "revenue expansion", "new customer base", "other/unclear"];
+        const productOrder = (payload.productExpansionTaxonomy || []).map((item) => item.name);
         const leftTotals = new Map();
         const rightTotals = new Map();
         for (const flow of flows) {
@@ -945,28 +1040,29 @@
 
         const leftLabels = [...leftTotals.keys()].sort((a, b) => segmentOrder.indexOf(a) - segmentOrder.indexOf(b));
         const rightLabels = [...rightTotals.keys()].sort((a, b) => {
-          const ai = rationaleOrder.indexOf(a);
-          const bi = rationaleOrder.indexOf(b);
+          const ai = productOrder.indexOf(a);
+          const bi = productOrder.indexOf(b);
           return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi) || a.localeCompare(b);
         });
 
         const width = 900;
-        const height = 560;
+        const height = 650;
         const top = 38;
         const bottom = 30;
-        const gap = 18;
+        const gap = 14;
         const leftX = 24;
         const rightX = 622;
         const nodeW = 16;
         const total = [...leftTotals.values()].reduce((sum, value) => sum + value, 0) || 1;
-        const scale = (height - top - bottom - gap * (leftLabels.length - 1)) / total;
+        const sideCount = Math.max(leftLabels.length, rightLabels.length);
+        const scale = (height - top - bottom - gap * (sideCount - 1)) / total;
 
         function layout(labels, totals) {
           let y = top;
           const nodes = new Map();
           for (const label of labels) {
             const rawHeight = (totals.get(label) || 0) * scale;
-            const nodeHeight = Math.max(16, rawHeight);
+            const nodeHeight = Math.max(10, rawHeight);
             nodes.set(label, { label, y, height: nodeHeight, used: 0, total: totals.get(label) || 0 });
             y += nodeHeight + gap;
           }
@@ -999,22 +1095,22 @@
         function nodeMarkup(nodes, x, labelSide) {
           return [...nodes.values()]
             .map((node) => {
-              const color = labelSide === "left" ? segmentColor(node.label) : "#556b8e";
+              const color = labelSide === "left" ? segmentColor(node.label) : productColor(node.label);
               const labelX = labelSide === "left" ? x + nodeW + 10 : x + nodeW + 10;
               const anchor = "start";
               const label = shortLabel(node.label, labelSide === "left" ? 24 : 30);
               return `<g>
                 <rect x="${x}" y="${node.y.toFixed(2)}" width="${nodeW}" height="${node.height.toFixed(2)}" rx="4" fill="${color}"></rect>
-                <text x="${labelX}" y="${(node.y + node.height / 2 - 6).toFixed(2)}" text-anchor="${anchor}" fill="#17202a" font-size="13" font-weight="700">${escapeHtml(label)}</text>
-                <text x="${labelX}" y="${(node.y + node.height / 2 + 12).toFixed(2)}" text-anchor="${anchor}" fill="#607080" font-size="12">${fmtMetric(node.total)}</text>
+                <text x="${labelX}" y="${(node.y + node.height / 2 - 6).toFixed(2)}" text-anchor="${anchor}" fill="#1e1503" font-size="13" font-weight="700">${escapeHtml(label)}</text>
+                <text x="${labelX}" y="${(node.y + node.height / 2 + 12).toFixed(2)}" text-anchor="${anchor}" fill="#616161" font-size="12">${fmtMetric(node.total)}</text>
               </g>`;
             })
             .join("");
         }
 
-        const metricNote = state.sankeyMetric === "value" ? "Disclosed value, USD mm equivalent" : "Deal count, split across multi-label rationales";
-        chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Buyer segment to rationale flow">
-          <text x="24" y="19" fill="#607080" font-size="12">${metricNote}</text>
+        const metricNote = state.sankeyMetric === "value" ? "Product expansion rows with disclosed value, USD mm equivalent" : "Product expansion deal count";
+        chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Buyer segment to product expansion type flow">
+          <text x="24" y="19" fill="#616161" font-size="12">${metricNote}</text>
           ${paths}
           ${nodeMarkup(leftNodes, leftX, "left")}
           ${nodeMarkup(rightNodes, rightX, "right")}
@@ -1082,6 +1178,7 @@
               <td><span class="pill">${escapeHtml(row.acquirerType)}</span></td>
               <td><span class="pill ${pillClass(row.acquirerCategory)}">${escapeHtml(row.acquirerCategory)}</span></td>
               <td>${escapeHtml(row.rationaleCategory)}</td>
+              <td>${row.productExpansionType !== "Not product expansion" ? `<span class="pill">${escapeHtml(row.productExpansionType)}</span>` : `<span class="muted">-</span>`}</td>
               <td><div class="quote">${escapeHtml(row.rationaleTheme || row.rationaleQuote || "No rationale captured")}</div></td>
               <td>${source}</td>
               <td>${row.hasQaFlag ? `<span class="qa" title="${escapeHtml(row.qaFlags)}">Review</span>` : `<span class="muted">OK</span>`}</td>
@@ -1091,7 +1188,7 @@
       }
 
       function downloadCsv(rows) {
-        const headers = ["dealId", "acquirer", "target", "acquirerType", "acquirerCategory", "dealSize", "country", "rationaleCategory", "rationaleTheme", "sourceType", "sourceUrl", "qaFlags"];
+        const headers = ["dealId", "acquirer", "target", "acquirerType", "acquirerCategory", "strategicMotion", "productExpansionType", "dealSize", "country", "rationaleCategory", "rationaleTheme", "sourceType", "sourceUrl", "qaFlags"];
         const csv = [headers.join(",")]
           .concat(
             rows.map((row) =>
