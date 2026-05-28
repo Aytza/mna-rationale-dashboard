@@ -159,7 +159,7 @@
 
       .kpis {
         display: grid;
-        grid-template-columns: repeat(6, minmax(130px, 1fr));
+        grid-template-columns: repeat(7, minmax(120px, 1fr));
         gap: 12px;
         margin-bottom: 18px;
       }
@@ -195,7 +195,7 @@
 
       .toolbar {
         display: grid;
-        grid-template-columns: minmax(220px, 1.4fr) repeat(4, minmax(160px, 1fr)) auto;
+        grid-template-columns: minmax(220px, 1.3fr) repeat(6, minmax(135px, 1fr)) auto;
         gap: 10px;
         align-items: end;
         background: var(--panel);
@@ -259,6 +259,14 @@
         margin-bottom: 18px;
       }
 
+      .geo-grid {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(280px, 1fr));
+        gap: 14px;
+        align-items: stretch;
+        margin-bottom: 18px;
+      }
+
       .sankey-panel {
         grid-row: span 2;
       }
@@ -307,6 +315,12 @@
         gap: 10px;
       }
 
+      .bar-section + .bar-section {
+        margin-top: 18px;
+        padding-top: 16px;
+        border-top: 1px solid var(--line);
+      }
+
       .bar-row {
         display: grid;
         grid-template-columns: minmax(110px, 150px) 1fr 48px;
@@ -340,12 +354,17 @@
         font-variant-numeric: tabular-nums;
       }
 
+      .empty-note {
+        color: var(--muted);
+        padding: 10px 0;
+      }
+
       .canvas-wrap {
         height: 270px;
       }
 
       .sankey-chart {
-        min-height: 665px;
+        min-height: 780px;
       }
 
       .sankey-chart svg {
@@ -451,7 +470,7 @@
 
       table {
         width: 100%;
-        min-width: 1240px;
+        min-width: 1520px;
         border-collapse: collapse;
         table-layout: fixed;
       }
@@ -521,6 +540,16 @@
         color: var(--dark-purple);
       }
 
+      .pill.ai {
+        background: #e7f3f3;
+        color: var(--teal);
+      }
+
+      .pill.geo {
+        background: #fff2d2;
+        color: #7c5300;
+      }
+
       .muted {
         color: var(--muted);
       }
@@ -566,6 +595,10 @@
         }
 
         .insight-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .geo-grid {
           grid-template-columns: 1fr;
         }
 
@@ -665,6 +698,16 @@
             <div class="note">Rows with URLs</div>
           </div>
           <div class="kpi">
+            <div class="label">AI Mentioned</div>
+            <div class="value" id="kpiAi">0</div>
+            <div class="note">Explicit AI / ML signal</div>
+          </div>
+          <div class="kpi">
+            <div class="label">Buyer HQ Known</div>
+            <div class="value" id="kpiBuyerHq">0</div>
+            <div class="note">Rows with acquirer country</div>
+          </div>
+          <div class="kpi">
             <div class="label">QA Flags</div>
             <div class="value" id="kpiQa">0</div>
             <div class="note">Need review</div>
@@ -673,11 +716,6 @@
             <div class="label">Disclosed Size</div>
             <div class="value" id="kpiDealSize">$0</div>
             <div class="note">Sum where available, USD mm equiv.</div>
-          </div>
-          <div class="kpi">
-            <div class="label">Missing Buyers</div>
-            <div class="value" id="kpiMissing">0</div>
-            <div class="note">Flagged, not invented</div>
           </div>
         </section>
 
@@ -697,6 +735,22 @@
           <div>
             <label for="sourceFilter">Source Type</label>
             <select id="sourceFilter"></select>
+          </div>
+          <div>
+            <label for="aiFilter">AI Signal</label>
+            <select id="aiFilter">
+              <option value="all">All rows</option>
+              <option value="yes">AI mentioned</option>
+              <option value="no">No AI mention</option>
+            </select>
+          </div>
+          <div>
+            <label for="acquiredRegionFilter">Acquired HQ Region</label>
+            <select id="acquiredRegionFilter"></select>
+          </div>
+          <div>
+            <label for="geoFilter">Geo Pair</label>
+            <select id="geoFilter"></select>
           </div>
           <div>
             <label for="qaFilter">QA Status</label>
@@ -728,7 +782,7 @@
             </div>
           </article>
           <article class="panel">
-            <h2>Rationale Themes</h2>
+            <h2>Primary Rationale</h2>
             <div class="panel-body">
               <div id="rationaleBars" class="bars"></div>
             </div>
@@ -749,16 +803,54 @@
             </div>
           </article>
           <article class="panel">
-            <h2>Strategic Motion 2x2</h2>
+            <h2>AI Mention Analysis</h2>
             <div class="panel-body">
-              <div class="matrix-note">Quadrants combine product/capability expansion with market expansion signals. Value uses disclosed deal size only.</div>
-              <div id="motionMatrix" class="motion-matrix"></div>
+              <div class="matrix-note" id="aiNote"></div>
+              <div class="bar-section">
+                <div id="aiBuyerBars" class="bars"></div>
+              </div>
             </div>
           </article>
           <article class="panel">
             <h2>Product Expansion Taxonomy</h2>
             <div class="panel-body">
               <div id="productBars" class="bars"></div>
+            </div>
+          </article>
+        </section>
+
+        <section class="geo-grid" aria-label="Geography analysis">
+          <article class="panel">
+            <h2>Acquired Company HQ</h2>
+            <div class="panel-body">
+              <div class="bar-section">
+                <div class="matrix-note">Regions</div>
+                <div id="acquiredRegionBars" class="bars"></div>
+              </div>
+              <div class="bar-section">
+                <div class="matrix-note">Top countries</div>
+                <div id="acquiredCountryBars" class="bars"></div>
+              </div>
+            </div>
+          </article>
+          <article class="panel">
+            <h2>Buyer HQ</h2>
+            <div class="panel-body">
+              <div class="matrix-note" id="buyerGeoNote"></div>
+              <div id="buyerCountryBars" class="bars"></div>
+            </div>
+          </article>
+          <article class="panel">
+            <h2>Cross-Border View</h2>
+            <div class="panel-body">
+              <div class="bar-section">
+                <div class="matrix-note">Buyer HQ vs. acquired HQ</div>
+                <div id="geoPairBars" class="bars"></div>
+              </div>
+              <div class="bar-section">
+                <div class="matrix-note">Top regional routes</div>
+                <div id="geoRouteBars" class="bars"></div>
+              </div>
             </div>
           </article>
         </section>
@@ -776,6 +868,8 @@
                   <th style="width: 170px">Target</th>
                   <th style="width: 150px">Type</th>
                   <th style="width: 108px">Segment</th>
+                  <th style="width: 130px">Geo</th>
+                  <th style="width: 84px">AI</th>
                   <th style="width: 145px">Rationale</th>
                   <th style="width: 180px">Product Expansion</th>
                   <th>Theme / quote</th>
@@ -804,6 +898,9 @@
         rollup: "all",
         type: "all",
         source: "all",
+        ai: "all",
+        acquiredRegion: "all",
+        geo: "all",
         qa: "all",
         sankeyMetric: "count",
       };
@@ -844,13 +941,16 @@
         byId("kpiDeals").textContent = fmtInt(payload.summary.totalDeals);
         byId("kpiAcquirers").textContent = fmtInt(payload.summary.uniqueAcquirers);
         byId("kpiSourced").textContent = fmtInt(payload.summary.sourcedRows);
+        byId("kpiAi").textContent = fmtInt(payload.summary.aiMentionedRows || 0);
+        byId("kpiBuyerHq").textContent = fmtInt(payload.summary.buyerHqKnownRows || 0);
         byId("kpiQa").textContent = fmtInt(payload.summary.qaRows);
         byId("kpiDealSize").textContent = fmtMoney(payload.summary.totalDisclosedDealSize);
-        byId("kpiMissing").textContent = fmtInt(payload.summary.missingAcquirerRows);
 
         populateSelect("rollupFilter", countBy(allRows, "acquirerCategory").map(([k]) => k), "All segments");
         populateSelect("typeFilter", countBy(allRows, "acquirerType").map(([k]) => k), "All types");
         populateSelect("sourceFilter", countBy(allRows, "sourceType").map(([k]) => k), "All sources");
+        populateSelect("acquiredRegionFilter", countBy(allRows, "acquiredRegion").map(([k]) => k), "All regions");
+        populateSelect("geoFilter", countBy(allRows, "geoPairStatus").map(([k]) => k), "All geo pairs");
 
         byId("search").addEventListener("input", (event) => {
           state.search = event.target.value.trim().toLowerCase();
@@ -866,6 +966,18 @@
         });
         byId("sourceFilter").addEventListener("change", (event) => {
           state.source = event.target.value;
+          render();
+        });
+        byId("aiFilter").addEventListener("change", (event) => {
+          state.ai = event.target.value;
+          render();
+        });
+        byId("acquiredRegionFilter").addEventListener("change", (event) => {
+          state.acquiredRegion = event.target.value;
+          render();
+        });
+        byId("geoFilter").addEventListener("change", (event) => {
+          state.geo = event.target.value;
           render();
         });
         byId("qaFilter").addEventListener("change", (event) => {
@@ -885,10 +997,30 @@
           if (state.rollup !== "all" && row.acquirerCategory !== state.rollup) return false;
           if (state.type !== "all" && row.acquirerType !== state.type) return false;
           if (state.source !== "all" && row.sourceType !== state.source) return false;
+          if (state.ai === "yes" && !row.aiMentioned) return false;
+          if (state.ai === "no" && row.aiMentioned) return false;
+          if (state.acquiredRegion !== "all" && row.acquiredRegion !== state.acquiredRegion) return false;
+          if (state.geo !== "all" && row.geoPairStatus !== state.geo) return false;
           if (state.qa === "flagged" && !row.hasQaFlag) return false;
           if (state.qa === "clean" && row.hasQaFlag) return false;
           if (state.search) {
-            const haystack = [row.acquirer, row.target, row.rationaleTheme, row.rationaleQuote, row.country, row.qaFlags, row.acquirerType, row.rationaleCategory]
+            const haystack = [
+              row.acquirer,
+              row.target,
+              row.rationaleTheme,
+              row.rationaleQuote,
+              row.country,
+              row.acquiredCountry,
+              row.acquiredRegion,
+              row.buyerCountry,
+              row.buyerRegion,
+              row.geoPairStatus,
+              row.aiMentionEvidence,
+              row.qaFlags,
+              row.acquirerType,
+              row.rationaleCategory,
+              row.sourceRationaleCategory,
+            ]
               .join(" ")
               .toLowerCase();
             if (!haystack.includes(state.search)) return false;
@@ -902,14 +1034,19 @@
         byId("tableCount").textContent = `${fmtInt(rows.length)} of ${fmtInt(allRows.length)} rows`;
         renderRollupChart(rows);
         renderBars("typeBars", countBy(rows, "acquirerType").slice(0, 12), colors[0]);
-        renderBars("rationaleBars", countBy(rows, "rationaleLabels", true).slice(0, 8), colors[1]);
+        renderBars("rationaleBars", countBy(rows, "primaryRationaleCategory").slice(0, 8), colors[1]);
         renderBars("productBars", countBy(rows.filter((row) => row.productExpansionType !== "Not product expansion"), "productExpansionType").slice(0, 10), colors[2]);
+        renderAiPanel(rows);
+        renderGeography(rows);
         renderSankey(rows);
-        renderMotionMatrix(rows);
         renderTable(rows);
       }
 
       function renderBars(id, entries, color) {
+        if (!entries.length) {
+          byId(id).innerHTML = `<div class="empty-note">No rows in the current filter.</div>`;
+          return;
+        }
         const max = Math.max(1, ...entries.map(([, value]) => value));
         byId(id).innerHTML = entries
           .map(([label, value]) => {
@@ -1046,10 +1183,10 @@
         });
 
         const width = 900;
-        const height = 650;
+        const height = 760;
         const top = 38;
-        const bottom = 30;
-        const gap = 14;
+        const bottom = 50;
+        const gap = 18;
         const leftX = 24;
         const rightX = 622;
         const nodeW = 16;
@@ -1062,7 +1199,7 @@
           const nodes = new Map();
           for (const label of labels) {
             const rawHeight = (totals.get(label) || 0) * scale;
-            const nodeHeight = Math.max(10, rawHeight);
+            const nodeHeight = Math.max(14, rawHeight);
             nodes.set(label, { label, y, height: nodeHeight, used: 0, total: totals.get(label) || 0 });
             y += nodeHeight + gap;
           }
@@ -1115,6 +1252,27 @@
           ${nodeMarkup(leftNodes, leftX, "left")}
           ${nodeMarkup(rightNodes, rightX, "right")}
         </svg>`;
+      }
+
+      function renderAiPanel(rows) {
+        const aiRows = rows.filter((row) => row.aiMentioned);
+        const pct = rows.length ? Math.round((aiRows.length / rows.length) * 100) : 0;
+        byId("aiNote").textContent = `${fmtInt(aiRows.length)} of ${fmtInt(rows.length)} filtered rows (${pct}%) explicitly mention AI, artificial intelligence, ML, LLMs, or generative AI.`;
+        renderBars("aiBuyerBars", countBy(aiRows, "acquirerCategory").slice(0, 6), colors[1]);
+      }
+
+      function knownOnly(entries) {
+        return entries.filter(([label]) => label && label !== "Unknown" && label !== "Buyer HQ unknown");
+      }
+
+      function renderGeography(rows) {
+        const buyerKnown = rows.filter((row) => row.buyerCountry);
+        byId("buyerGeoNote").textContent = `${fmtInt(buyerKnown.length)} of ${fmtInt(rows.length)} filtered rows have buyer HQ country. The rest stay visible as unknown rather than inferred.`;
+        renderBars("acquiredRegionBars", countBy(rows, "acquiredRegion").slice(0, 8), colors[3]);
+        renderBars("acquiredCountryBars", countBy(rows, "acquiredCountry").slice(0, 10), colors[1]);
+        renderBars("buyerCountryBars", knownOnly(countBy(rows, "buyerCountry")).slice(0, 12), colors[0]);
+        renderBars("geoPairBars", countBy(rows, "geoPairStatus").slice(0, 6), colors[2]);
+        renderBars("geoRouteBars", knownOnly(countBy(rows, "geoRoute")).slice(0, 10), colors[3]);
       }
 
       function renderMotionMatrix(rows) {
@@ -1172,11 +1330,15 @@
             const source = row.sourceUrl
               ? `<a class="source-link" href="${escapeHtml(row.sourceUrl)}" target="_blank" rel="noopener">${escapeHtml(row.sourceType || "Source")}</a>`
               : `<span class="muted">${escapeHtml(row.sourceType || "No source")}</span>`;
+            const buyerGeo = row.buyerCountry ? `${row.buyerCountry}` : "Buyer HQ unknown";
+            const acquiredGeo = row.acquiredCountry ? `${row.acquiredCountry}` : "Acquired HQ unknown";
             return `<tr>
-              <td><strong>${escapeHtml(row.acquirer || "Unknown")}</strong><div class="muted">${escapeHtml(row.country || "")}</div></td>
-              <td>${escapeHtml(row.target)}</td>
+              <td><strong>${escapeHtml(row.acquirer || "Unknown")}</strong><div class="muted">${escapeHtml(buyerGeo)}</div></td>
+              <td><strong>${escapeHtml(row.target)}</strong><div class="muted">${escapeHtml(acquiredGeo)}</div></td>
               <td><span class="pill">${escapeHtml(row.acquirerType)}</span></td>
               <td><span class="pill ${pillClass(row.acquirerCategory)}">${escapeHtml(row.acquirerCategory)}</span></td>
+              <td><span class="pill geo">${escapeHtml(row.geoPairStatus || "Unknown")}</span></td>
+              <td>${row.aiMentioned ? `<span class="pill ai" title="${escapeHtml(row.aiMentionEvidence)}">AI</span>` : `<span class="muted">-</span>`}</td>
               <td>${escapeHtml(row.rationaleCategory)}</td>
               <td>${row.productExpansionType !== "Not product expansion" ? `<span class="pill">${escapeHtml(row.productExpansionType)}</span>` : `<span class="muted">-</span>`}</td>
               <td><div class="quote">${escapeHtml(row.rationaleTheme || row.rationaleQuote || "No rationale captured")}</div></td>
@@ -1188,7 +1350,28 @@
       }
 
       function downloadCsv(rows) {
-        const headers = ["dealId", "acquirer", "target", "acquirerType", "acquirerCategory", "strategicMotion", "productExpansionType", "dealSize", "country", "rationaleCategory", "rationaleTheme", "sourceType", "sourceUrl", "qaFlags"];
+        const headers = [
+          "dealId",
+          "acquirer",
+          "buyerCountry",
+          "buyerRegion",
+          "target",
+          "acquiredCountry",
+          "acquiredRegion",
+          "geoPairStatus",
+          "acquirerType",
+          "acquirerCategory",
+          "primaryRationaleCategory",
+          "sourceRationaleCategory",
+          "aiMentioned",
+          "aiMentionEvidence",
+          "productExpansionType",
+          "dealSize",
+          "rationaleTheme",
+          "sourceType",
+          "sourceUrl",
+          "qaFlags",
+        ];
         const csv = [headers.join(",")]
           .concat(
             rows.map((row) =>

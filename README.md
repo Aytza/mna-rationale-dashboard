@@ -2,6 +2,8 @@
 
 Static dashboard for the enriched 2025-2026 M&A rationale workbook.
 
+Current build includes primary rationale taxonomy, product-expansion subcategories, explicit AI mention flags, buyer/acquired HQ geography, and cross-border analysis.
+
 ## Local Preview
 
 ```sh
