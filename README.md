@@ -2,7 +2,39 @@
 
 Static dashboard for the enriched 2025-2026 M&A rationale workbook.
 
-Current build includes primary rationale taxonomy, product-expansion subcategories, explicit AI mention flags, buyer/acquired HQ geography, and cross-border analysis.
+Current build includes primary rationale taxonomy, product-expansion subcategories, explicit AI mention flags, buyer/acquired HQ geography, cross-border analysis, and an optional live Google Sheet override layer.
+
+## Live Manual Overrides
+
+The public dashboard tries to load a `Manual_Overrides` tab from the source Google Sheet at page load. If the tab is unavailable or not shared publicly/readable through Google Visualization, the dashboard falls back to the generated static dataset.
+
+For the live layer to work on GitHub Pages, the override source should be a native Google Sheet and the tab must be readable by the browser, ideally shared as viewable by anyone with the link. Uploaded Excel files opened in Drive are not reliable as a live source.
+
+Create a `Manual_Overrides` tab with these headers:
+
+```text
+Deal ID
+Row
+Acquirer Type Override
+Buyer Segment Override
+Primary Rationale Override
+Product Expansion Override
+AI Flag Override
+AI Evidence Override
+Buyer HQ Country Override
+Acquired HQ Country Override
+Rationale Theme Override
+Source Type Override
+Source URL Override
+QA Status Override
+QA Notes
+Reviewer
+Last Updated
+```
+
+Only `Deal ID` or `Row` plus the fields you want to override are required.
+
+To test a different native Sheet without redeploying, add `?sheetId=<google-sheet-id>&sheet=Manual_Overrides` to the dashboard URL. To bypass the live layer, use `?overrides=off`.
 
 ## Local Preview
 
