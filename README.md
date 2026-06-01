@@ -6,7 +6,7 @@ Current build includes primary rationale taxonomy, product-expansion subcategori
 
 ## Live Manual Overrides
 
-The public dashboard tries to load a `Manual_Overrides` tab from the source Google Sheet at page load. If the tab is unavailable or not shared publicly/readable through Google Visualization, the dashboard falls back to the generated static dataset.
+The public dashboard tries to load the `Manual_Overrides` tab from [Aytza M&A Dashboard Manual Overrides](https://docs.google.com/spreadsheets/d/1ey7OBRkaaU9OnRqlPE7DGEvDOYwomV3OO2xvrcwMfy0/edit) at page load. If the tab is unavailable or not shared publicly/readable through Google Visualization, the dashboard falls back to the generated static dataset.
 
 For the live layer to work on GitHub Pages, the override source should be a native Google Sheet and the tab must be readable by the browser, ideally shared as viewable by anyone with the link. Uploaded Excel files opened in Drive are not reliable as a live source.
 

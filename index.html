@@ -925,7 +925,7 @@
       let allRows = staticRows.map((row) => ({ ...row }));
       const colors = ["#6d275d", "#05878a", "#f2a51b", "#4259a0", "#c281d1", "#1e1503"];
       const liveOverrideConfig = {
-        sheetId: "1fHCvgzK6_xzNakigrsE21_NqDhvmG02y",
+        sheetId: "1ey7OBRkaaU9OnRqlPE7DGEvDOYwomV3OO2xvrcwMfy0",
         sheetName: "Manual_Overrides",
         sourceLabel: "Google Sheet Manual_Overrides",
       };
@@ -1138,8 +1138,13 @@
 
       function gvizToObjects(response) {
         const table = response?.table;
-        const headers = (table?.cols || []).map((col) => normalizeHeader(col.label || col.id));
-        return (table?.rows || []).map((sourceRow) => {
+        let headers = (table?.cols || []).map((col) => normalizeHeader(col.label || col.id));
+        let rows = table?.rows || [];
+        if (!headers.some(Boolean) && rows.length) {
+          headers = (rows[0].c || []).map((cell) => normalizeHeader(cell?.v ?? cell?.f ?? ""));
+          rows = rows.slice(1);
+        }
+        return rows.map((sourceRow) => {
           const out = {};
           headers.forEach((header, index) => {
             if (!header) return;
@@ -1148,6 +1153,10 @@
           });
           return out;
         });
+      }
+
+      function hasOverrideContent(row) {
+        return Object.values(row).some((value) => String(value ?? "").trim() !== "");
       }
 
       function applyOverrides(baseRows, overrideRows) {
@@ -1269,6 +1278,12 @@
           } else {
             const response = await googleSheetJsonp(sheetId, sheetName);
             overrideRows = gvizToObjects(response);
+          }
+          overrideRows = overrideRows.filter(hasOverrideContent);
+          if (!overrideRows.length) {
+            allRows = staticRows.map((row) => ({ ...row }));
+            setOverrideStatus("good", `connected to ${sourceName}; no manual override rows yet.`);
+            return;
           }
           const { rows, applied, unmatched } = applyOverrides(staticRows, overrideRows);
           allRows = rows;
