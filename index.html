@@ -1138,7 +1138,7 @@
 
       function gvizToObjects(response) {
         const table = response?.table;
-        let headers = (table?.cols || []).map((col) => normalizeHeader(col.label || col.id));
+        let headers = (table?.cols || []).map((col) => normalizeHeader(col.label));
         let rows = table?.rows || [];
         if (!headers.some(Boolean) && rows.length) {
           headers = (rows[0].c || []).map((cell) => normalizeHeader(cell?.v ?? cell?.f ?? ""));
