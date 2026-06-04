@@ -1220,7 +1220,9 @@
       function normalizeDashboardRow(row) {
         if (!row.acquiredCountry && row.country) row.acquiredCountry = row.country;
         if (!row.country && row.acquiredCountry) row.country = row.acquiredCountry;
-        if (row.acquirerType && rollupByType[row.acquirerType]) row.acquirerCategory = rollupByType[row.acquirerType];
+        row.acquirerCategory = String(row.acquirerCategory || "").trim();
+        if (!row.acquirerCategory && row.acquirerType && rollupByType[row.acquirerType]) row.acquirerCategory = rollupByType[row.acquirerType];
+        if (!row.acquirerCategory) row.acquirerCategory = "Other";
         row.acquiredRegion = row.acquiredCountry ? countryRegion(row.acquiredCountry) : row.acquiredRegion || "Unknown";
         row.buyerRegion = row.buyerCountry ? countryRegion(row.buyerCountry) : row.buyerRegion || "Unknown";
         row.geoPairStatus = computeGeoPair(row.buyerCountry, row.acquiredCountry);

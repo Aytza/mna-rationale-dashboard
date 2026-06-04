@@ -10,6 +10,8 @@ The public dashboard loads the `Dashboard_Data` tab from [Aytza M&A Dashboard Da
 
 Sheet edits appear in the dashboard after a browser refresh, the dashboard's `Refresh Live Data` action, or the automatic one-minute refresh while the page is open.
 
+`Buyer Segment` is the dashboard's authoritative segment field. The dashboard only rolls up from `Acquirer Type` when `Buyer Segment` is blank.
+
 For the live source to work on GitHub Pages, the source must be a native Google Sheet and the tab must be readable by the browser, ideally shared as viewable by anyone with the link. Uploaded Excel files opened in Drive are not reliable as a live source.
 
 To test a different native Sheet without redeploying, add `?sheetId=<google-sheet-id>&sheet=Dashboard_Data` to the dashboard URL. To force the static fallback, use `?source=static`.
