@@ -269,6 +269,24 @@
         border-radius: 999px;
       }
 
+      .secondary {
+        background: #fff;
+        color: var(--dark-purple);
+        border-color: var(--dark-purple);
+        border-radius: 999px;
+      }
+
+      button:disabled {
+        cursor: wait;
+        opacity: 0.62;
+      }
+
+      .action-buttons {
+        display: grid;
+        gap: 8px;
+        min-width: 150px;
+      }
+
       .grid {
         display: grid;
         grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.2fr) minmax(300px, 0.85fr);
@@ -787,8 +805,11 @@
             </select>
           </div>
           <div>
-            <label>&nbsp;</label>
-            <button class="primary" id="downloadCsv">Download CSV</button>
+            <label>Actions</label>
+            <div class="action-buttons">
+              <button class="secondary" id="refreshLiveData">Refresh Live Data</button>
+              <button class="primary" id="downloadCsv">Download CSV</button>
+            </div>
           </div>
         </section>
 
@@ -1076,7 +1097,18 @@
 
       function populateSelect(id, values, allLabel) {
         const select = byId(id);
+        const previousValue = select.value || "all";
         select.innerHTML = `<option value="all">${allLabel}</option>` + values.map((value) => `<option value="${escapeHtml(value)}">${escapeHtml(value)}</option>`).join("");
+        if ([...select.options].some((option) => option.value === previousValue)) select.value = previousValue;
+      }
+
+      function isLiveDataDisabled() {
+        const params = new URLSearchParams(window.location.search);
+        return params.get("source") === "static" || params.get("live") === "off";
+      }
+
+      function currentTimeLabel() {
+        return new Date().toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
       }
 
       function countryRegion(country) {
@@ -1221,12 +1253,12 @@
         status.innerHTML = `<strong>Live data:</strong> ${escapeHtml(message)}`;
       }
 
-      async function loadLiveRows() {
-        const params = new URLSearchParams(window.location.search);
-        if (params.get("source") === "static" || params.get("live") === "off") {
+      async function loadLiveRows({ preserveExisting = false } = {}) {
+        if (isLiveDataDisabled()) {
           setLiveStatus("warn", "off for this view; showing static enriched data.");
           return;
         }
+        const params = new URLSearchParams(window.location.search);
         const sheetId = params.get("sheetId") || liveDataConfig.sheetId;
         const sheetName = params.get("sheet") || liveDataConfig.sheetName;
         try {
@@ -1235,15 +1267,29 @@
           const response = await googleSheetJsonp(sheetId, sheetName);
           const liveRows = sheetRowsToDashboardRows(gvizToObjects(response));
           if (!liveRows.length) {
-            allRows = staticRows.map((row) => ({ ...row }));
-            setLiveStatus("warn", `connected to ${sourceName}, but no data rows were found. Showing static enriched data.`);
+            if (!preserveExisting) allRows = staticRows.map((row) => ({ ...row }));
+            const fallbackMessage = preserveExisting ? "Keeping the last loaded view." : "Showing static enriched data.";
+            setLiveStatus("warn", `connected to ${sourceName}, but no data rows were found. ${fallbackMessage}`);
             return;
           }
           allRows = liveRows;
-          setLiveStatus("good", `loaded ${fmtInt(liveRows.length)} rows from ${sourceName}.`);
+          setLiveStatus("good", `loaded ${fmtInt(liveRows.length)} rows from ${sourceName} at ${currentTimeLabel()}.`);
         } catch (error) {
-          allRows = staticRows.map((row) => ({ ...row }));
-          setLiveStatus("error", `${error.message} Showing static enriched data.`);
+          if (!preserveExisting) allRows = staticRows.map((row) => ({ ...row }));
+          const fallbackMessage = preserveExisting ? "Keeping the last loaded view." : "Showing static enriched data.";
+          setLiveStatus("error", `${error.message} ${fallbackMessage}`);
+        }
+      }
+
+      async function refreshLiveData() {
+        const button = byId("refreshLiveData");
+        if (button) button.disabled = true;
+        try {
+          await loadLiveRows({ preserveExisting: true });
+          hydrateControls();
+          render();
+        } finally {
+          if (button) button.disabled = false;
         }
       }
 
@@ -1307,8 +1353,14 @@
           state.sankeyMetric = event.target.value;
           render();
         });
+        byId("refreshLiveData").addEventListener("click", refreshLiveData);
         byId("downloadCsv").addEventListener("click", () => downloadCsv(filteredRows()));
         render();
+        if (!isLiveDataDisabled()) {
+          window.setInterval(() => {
+            if (document.visibilityState === "visible") refreshLiveData();
+          }, 60000);
+        }
       }
 
       function filteredRows() {

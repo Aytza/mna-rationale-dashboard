@@ -8,6 +8,8 @@ Current build includes primary rationale taxonomy, product-expansion subcategori
 
 The public dashboard loads the `Dashboard_Data` tab from [Aytza M&A Dashboard Data](https://docs.google.com/spreadsheets/d/1ey7OBRkaaU9OnRqlPE7DGEvDOYwomV3OO2xvrcwMfy0/edit) at page load. If the tab is unavailable or not shared publicly/readable through Google Visualization, the dashboard falls back to the generated static dataset.
 
+Sheet edits appear in the dashboard after a browser refresh, the dashboard's `Refresh Live Data` action, or the automatic one-minute refresh while the page is open.
+
 For the live source to work on GitHub Pages, the source must be a native Google Sheet and the tab must be readable by the browser, ideally shared as viewable by anyone with the link. Uploaded Excel files opened in Drive are not reliable as a live source.
 
 To test a different native Sheet without redeploying, add `?sheetId=<google-sheet-id>&sheet=Dashboard_Data` to the dashboard URL. To force the static fallback, use `?source=static`.
