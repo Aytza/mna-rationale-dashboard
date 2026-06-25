@@ -398,6 +398,78 @@
         font-variant-numeric: tabular-nums;
       }
 
+      .comparison-chart {
+        display: grid;
+        gap: 12px;
+      }
+
+      .comparison-legend {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        color: var(--muted);
+        font-size: 12px;
+        margin-bottom: 2px;
+      }
+
+      .legend-item {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+      }
+
+      .legend-swatch {
+        width: 11px;
+        height: 11px;
+        border-radius: 999px;
+        border: 1px solid var(--line);
+      }
+
+      .compare-row {
+        display: grid;
+        grid-template-columns: minmax(138px, 180px) 1fr;
+        gap: 10px;
+        align-items: center;
+      }
+
+      .compare-label {
+        color: var(--ink);
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+      }
+
+      .compare-bars {
+        display: grid;
+        gap: 6px;
+      }
+
+      .compare-line {
+        display: grid;
+        grid-template-columns: 1fr 78px;
+        gap: 8px;
+        align-items: center;
+      }
+
+      .compare-track {
+        height: 10px;
+        background: var(--soft);
+        border-radius: 999px;
+        overflow: hidden;
+      }
+
+      .compare-fill {
+        height: 100%;
+        border-radius: inherit;
+      }
+
+      .compare-value {
+        color: var(--muted);
+        text-align: right;
+        font-size: 12px;
+        font-variant-numeric: tabular-nums;
+      }
+
       .empty-note {
         color: var(--muted);
         padding: 10px 0;
@@ -579,6 +651,16 @@
         color: var(--purple);
       }
 
+      .pill.tech {
+        background: #e8ecfb;
+        color: var(--blue);
+      }
+
+      .pill.financial-vehicle {
+        background: #f4f0e8;
+        color: #6c4f1d;
+      }
+
       .pill.other {
         background: #eee;
         color: var(--dark-purple);
@@ -699,6 +781,10 @@
         td {
           padding: 9px;
         }
+
+        .compare-row {
+          grid-template-columns: 1fr;
+        }
       }
     </style>
   </head>
@@ -719,7 +805,6 @@
           <div class="header-meta">
             <div id="generatedAt"></div>
             <div id="sourceWorkbook"></div>
-            <div><a href="assets/aytza-mna-enriched.xlsx">Download enriched workbook</a></div>
           </div>
         </div>
       </header>
@@ -808,7 +893,6 @@
             <label>Actions</label>
             <div class="action-buttons">
               <button class="secondary" id="refreshLiveData">Refresh Live Data</button>
-              <button class="primary" id="downloadCsv">Download CSV</button>
             </div>
           </div>
         </section>
@@ -827,15 +911,16 @@
             </div>
           </article>
           <article class="panel">
-            <h2>Acquirer Types</h2>
+            <h2>Primary vs Secondary Rationale</h2>
             <div class="panel-body">
-              <div id="typeBars" class="bars"></div>
+              <div id="motionComparisonBars" class="comparison-chart"></div>
             </div>
           </article>
           <article class="panel">
-            <h2>Primary Rationale</h2>
+            <h2>Health Tech vs Incumbent</h2>
             <div class="panel-body">
-              <div id="rationaleBars" class="bars"></div>
+              <div class="matrix-note" id="segmentCompareNote"></div>
+              <div id="segmentMotionCompare" class="comparison-chart"></div>
             </div>
           </article>
         </section>
@@ -843,7 +928,7 @@
         <section class="insight-grid" aria-label="Strategic views">
           <article class="panel sankey-panel">
             <div class="panel-title-row">
-              <h2>Buyer Segment to Product Expansion Type</h2>
+              <h2>Buyer Segment to Primary Strategic Motion</h2>
               <select id="sankeyMetric" class="compact-select" aria-label="Sankey metric">
                 <option value="count">Deal count</option>
                 <option value="value">Disclosed value</option>
@@ -863,9 +948,9 @@
             </div>
           </article>
           <article class="panel">
-            <h2>Product Expansion Taxonomy</h2>
+            <h2>Acquirer Types</h2>
             <div class="panel-body">
-              <div id="productBars" class="bars"></div>
+              <div id="typeBars" class="bars"></div>
             </div>
           </article>
         </section>
@@ -921,8 +1006,8 @@
                   <th style="width: 108px">Segment</th>
                   <th style="width: 130px">Geo</th>
                   <th style="width: 84px">AI</th>
-                  <th style="width: 145px">Rationale</th>
-                  <th style="width: 180px">Product Expansion</th>
+                  <th style="width: 170px">Primary Motion</th>
+                  <th style="width: 170px">Secondary Motion</th>
                   <th>Theme / quote</th>
                   <th style="width: 160px">Source</th>
                   <th style="width: 80px">QA</th>
@@ -946,10 +1031,21 @@
       let allRows = staticRows.map((row) => ({ ...row }));
       const colors = ["#6d275d", "#05878a", "#f2a51b", "#4259a0", "#c281d1", "#1e1503"];
       const liveDataConfig = {
-        sheetId: "1ey7OBRkaaU9OnRqlPE7DGEvDOYwomV3OO2xvrcwMfy0",
+        sheetId: "1a6VBIqUISlTlemZ5qGnPt56QwB9IV39_NGfJn8nJzMc",
         sheetName: "Dashboard_Data",
-        sourceLabel: "Dashboard_Data Google Sheet",
+        sourceLabel: "Aytza_MnA_Strategic_Motions_Full",
       };
+      const segmentOrder = ["Health Tech", "Incumbent", "PE", "Tech", "Financial Vehicle", "Other"];
+      const strategicMotionOrder = [
+        "Adjacent capability expansion",
+        "Asset / pipeline acquisition",
+        "AI & automation capability",
+        "Customer / revenue / scale expansion",
+        "Geographic / market entry",
+        "New customer segment / channel",
+        "Vertical integration",
+        "Other / unclear",
+      ];
       const rollupByType = {
         "Health Tech": "Health Tech",
         "Health System / Provider": "Incumbent",
@@ -959,10 +1055,13 @@
         "MedTech / Devices": "Incumbent",
         "Diagnostics / Life Sciences Tools": "Incumbent",
         "Pharma / Biotech": "Incumbent",
-        "General Tech / IT": "Other",
+        "General Tech / IT": "Tech",
         "PE / Financial Sponsor": "PE",
         "SPAC / Public Shell": "Other",
-        "Healthcare Finance / Royalty": "Other",
+        "Healthcare Finance / Royalty": "Financial Vehicle",
+        "VC": "Financial Vehicle",
+        "Individual": "Other",
+        "Consumer": "Other",
         "Other / Unknown": "Other",
       };
       const countryRegions = {
@@ -1040,6 +1139,9 @@
         ["Attribution", "attribution"],
         ["Rationale Category", "rationaleCategory"],
         ["Primary Rationale", "primaryRationaleCategory"],
+        ["Strategic Motion (Primary)", "strategicMotionPrimary"],
+        ["Strategic Motion (Secondary)", "strategicMotionSecondary"],
+        ["Motion Rationale", "motionRationale"],
         ["Source Rationale Category", "sourceRationaleCategory"],
         ["Rationale Labels", "rationaleLabels"],
         ["Rationale Mention Tags", "rationaleMentionTags"],
@@ -1093,6 +1195,33 @@
           for (const value of values) counts.set(value, (counts.get(value) || 0) + 1);
         }
         return [...counts.entries()].sort((a, b) => b[1] - a[1]);
+      }
+
+      function orderIndex(label, order) {
+        const index = order.indexOf(label);
+        if (index !== -1) return index;
+        return /other|unknown|unclear|undisclosed/i.test(String(label || "")) ? 998 : 500;
+      }
+
+      function orderEntries(entries, order) {
+        return [...entries].sort((a, b) => {
+          const rank = orderIndex(a[0], order) - orderIndex(b[0], order);
+          return rank || b[1] - a[1] || String(a[0]).localeCompare(String(b[0]));
+        });
+      }
+
+      function countMotion(rows, field, { includeBlankAsOther = false } = {}) {
+        const counts = new Map();
+        for (const row of rows) {
+          const values = splitSheetList(row[field]);
+          const motions = values.length ? values : includeBlankAsOther ? ["Other / unclear"] : [];
+          for (const motion of motions) counts.set(motion, (counts.get(motion) || 0) + 1);
+        }
+        return orderEntries([...counts.entries()], strategicMotionOrder);
+      }
+
+      function motionRows(rows, motion) {
+        return rows.filter((row) => splitSheetList(row.strategicMotionPrimary).includes(motion));
       }
 
       function populateSelect(id, values, allLabel) {
@@ -1160,7 +1289,7 @@
           });
           script.onerror = () => {
             cleanup();
-            reject(new Error("Could not load the Google Sheet data tab."));
+            reject(new Error("Could not load the Google Sheet data tab. Check that the source Sheet is shared as viewable by anyone with the link."));
           };
           script.src = `https://docs.google.com/spreadsheets/d/${encodeURIComponent(sheetId)}/gviz/tq?${params.toString()}`;
           document.head.appendChild(script);
@@ -1198,6 +1327,32 @@
           .filter(Boolean);
       }
 
+      function normalizeStrategicMotionValue(value) {
+        const text = String(value || "").trim();
+        if (!text) return "";
+        const aliases = {
+          "Product / capability expansion": "Adjacent capability expansion",
+          "product/capability expansion": "Adjacent capability expansion",
+          "New customer / channel access": "New customer segment / channel",
+          "new customer base": "New customer segment / channel",
+          "Revenue expansion": "Customer / revenue / scale expansion",
+          "revenue expansion": "Customer / revenue / scale expansion",
+          "Geographic expansion": "Geographic / market entry",
+          "geographic expansion": "Geographic / market entry",
+          "other/unclear": "Other / unclear",
+          "Other / Unknown": "Other / unclear",
+          "Other Product Expansion": "Adjacent capability expansion",
+        };
+        return aliases[text] || text;
+      }
+
+      function normalizeStrategicMotionList(value) {
+        return splitSheetList(value)
+          .map(normalizeStrategicMotionValue)
+          .filter(Boolean)
+          .join("; ");
+      }
+
       function parseBooleanValue(value) {
         if (typeof value === "boolean") return value;
         const text = String(value || "").trim().toLowerCase();
@@ -1227,12 +1382,18 @@
         row.buyerRegion = row.buyerCountry ? countryRegion(row.buyerCountry) : row.buyerRegion || "Unknown";
         row.geoPairStatus = computeGeoPair(row.buyerCountry, row.acquiredCountry);
         row.geoRoute = row.buyerRegion !== "Unknown" && row.acquiredRegion !== "Unknown" ? `${row.buyerRegion} -> ${row.acquiredRegion}` : "Unknown";
-        row.primaryRationaleCategory = row.primaryRationaleCategory || row.rationaleCategory || "other/unclear";
+        row.strategicMotionPrimary = normalizeStrategicMotionValue(row.strategicMotionPrimary || row.primaryRationaleCategory || row.rationaleCategory || "Other / unclear");
+        row.strategicMotionSecondary = normalizeStrategicMotionList(row.strategicMotionSecondary || "");
+        row.primaryRationaleCategory = row.strategicMotionPrimary;
         row.rationaleCategory = row.rationaleCategory || row.primaryRationaleCategory;
         row.productExpansionType = row.productExpansionType || (row.primaryRationaleCategory === "Product / capability expansion" ? "Other Product Expansion" : "Not product expansion");
         row.productCapabilitySubtheme = row.productCapabilitySubtheme || row.productExpansionType;
         if (row.hasQaFlag === null || row.hasQaFlag === undefined) row.hasQaFlag = Boolean(row.qaFlags);
         return row;
+      }
+
+      function staticFallbackRows() {
+        return staticRows.map((row) => normalizeDashboardRow({ ...row }));
       }
 
       function sheetRowsToDashboardRows(sheetRows) {
@@ -1257,6 +1418,7 @@
 
       async function loadLiveRows({ preserveExisting = false } = {}) {
         if (isLiveDataDisabled()) {
+          allRows = staticFallbackRows();
           setLiveStatus("warn", "off for this view; showing static enriched data.");
           return;
         }
@@ -1269,7 +1431,7 @@
           const response = await googleSheetJsonp(sheetId, sheetName);
           const liveRows = sheetRowsToDashboardRows(gvizToObjects(response));
           if (!liveRows.length) {
-            if (!preserveExisting) allRows = staticRows.map((row) => ({ ...row }));
+            if (!preserveExisting) allRows = staticFallbackRows();
             const fallbackMessage = preserveExisting ? "Keeping the last loaded view." : "Showing static enriched data.";
             setLiveStatus("warn", `connected to ${sourceName}, but no data rows were found. ${fallbackMessage}`);
             return;
@@ -1277,7 +1439,7 @@
           allRows = liveRows;
           setLiveStatus("good", `loaded ${fmtInt(liveRows.length)} rows from ${sourceName} at ${currentTimeLabel()}.`);
         } catch (error) {
-          if (!preserveExisting) allRows = staticRows.map((row) => ({ ...row }));
+          if (!preserveExisting) allRows = staticFallbackRows();
           const fallbackMessage = preserveExisting ? "Keeping the last loaded view." : "Showing static enriched data.";
           setLiveStatus("error", `${error.message} ${fallbackMessage}`);
         }
@@ -1296,7 +1458,7 @@
       }
 
       function hydrateControls() {
-        populateSelect("rollupFilter", countBy(allRows, "acquirerCategory").map(([k]) => k), "All segments");
+        populateSelect("rollupFilter", orderEntries(countBy(allRows, "acquirerCategory"), segmentOrder).map(([k]) => k), "All segments");
         populateSelect("typeFilter", countBy(allRows, "acquirerType").map(([k]) => k), "All types");
         populateSelect("sourceFilter", countBy(allRows, "sourceType").map(([k]) => k), "All sources");
         populateSelect("acquiredRegionFilter", countBy(allRows, "acquiredRegion").map(([k]) => k), "All regions");
@@ -1315,7 +1477,8 @@
 
       async function init() {
         byId("generatedAt").textContent = `Generated ${payload.generatedAt}`;
-        byId("sourceWorkbook").textContent = payload.sourceWorkbook;
+        byId("sourceWorkbook").textContent = liveDataConfig.sourceLabel;
+        allRows = staticFallbackRows();
         await loadLiveRows();
         hydrateControls();
 
@@ -1356,7 +1519,6 @@
           render();
         });
         byId("refreshLiveData").addEventListener("click", refreshLiveData);
-        byId("downloadCsv").addEventListener("click", () => downloadCsv(filteredRows()));
         render();
         if (!isLiveDataDisabled()) {
           window.setInterval(() => {
@@ -1393,6 +1555,9 @@
               row.acquirerType,
               row.rationaleCategory,
               row.sourceRationaleCategory,
+              row.strategicMotionPrimary,
+              row.strategicMotionSecondary,
+              row.motionRationale,
             ]
               .join(" ")
               .toLowerCase();
@@ -1408,8 +1573,8 @@
         byId("tableCount").textContent = `${fmtInt(rows.length)} of ${fmtInt(allRows.length)} rows`;
         renderRollupChart(rows);
         renderBars("typeBars", countBy(rows, "acquirerType").slice(0, 12), colors[0]);
-        renderBars("rationaleBars", countBy(rows, "primaryRationaleCategory").slice(0, 8), colors[1]);
-        renderBars("productBars", countBy(rows.filter((row) => row.productExpansionType !== "Not product expansion"), "productExpansionType").slice(0, 10), colors[2]);
+        renderMotionComparison(rows);
+        renderSegmentMotionCompare(rows);
         renderAiPanel(rows);
         renderGeography(rows);
         renderSankey(rows);
@@ -1434,6 +1599,83 @@
           .join("");
       }
 
+      function renderMotionComparison(rows) {
+        const primaryCounts = new Map(countMotion(rows, "strategicMotionPrimary", { includeBlankAsOther: true }));
+        const secondaryCounts = new Map(countMotion(rows, "strategicMotionSecondary"));
+        const primaryTotal = rows.length || 1;
+        const secondaryTotal = [...secondaryCounts.values()].reduce((sum, value) => sum + value, 0) || 1;
+        const labels = strategicMotionOrder.filter((label) => primaryCounts.has(label) || secondaryCounts.has(label));
+        if (!labels.length) {
+          byId("motionComparisonBars").innerHTML = `<div class="empty-note">No rationale rows in the current filter.</div>`;
+          return;
+        }
+        byId("motionComparisonBars").innerHTML = `
+          <div class="comparison-legend">
+            <span class="legend-item"><span class="legend-swatch" style="background:${colors[0]}"></span>Primary, n=${fmtInt(rows.length)}</span>
+            <span class="legend-item"><span class="legend-swatch" style="background:${colors[1]}"></span>Secondary, n=${fmtInt(secondaryTotal)}</span>
+          </div>
+          ${labels
+            .map((label) => {
+              const primary = primaryCounts.get(label) || 0;
+              const secondary = secondaryCounts.get(label) || 0;
+              const primaryPct = (primary / primaryTotal) * 100;
+              const secondaryPct = (secondary / secondaryTotal) * 100;
+              return `<div class="compare-row">
+                <div class="compare-label" title="${escapeHtml(label)}">${escapeHtml(label)}</div>
+                <div class="compare-bars">
+                  <div class="compare-line">
+                    <div class="compare-track"><div class="compare-fill" style="width:${primaryPct}%;background:${colors[0]}"></div></div>
+                    <div class="compare-value">${Math.round(primaryPct)}% / ${fmtInt(primary)}</div>
+                  </div>
+                  <div class="compare-line">
+                    <div class="compare-track"><div class="compare-fill" style="width:${secondaryPct}%;background:${colors[1]}"></div></div>
+                    <div class="compare-value">${Math.round(secondaryPct)}% / ${fmtInt(secondary)}</div>
+                  </div>
+                </div>
+              </div>`;
+            })
+            .join("")}`;
+      }
+
+      function renderSegmentMotionCompare(rows) {
+        const healthTechRows = rows.filter((row) => row.acquirerCategory === "Health Tech");
+        const incumbentRows = rows.filter((row) => row.acquirerCategory === "Incumbent");
+        const healthTechTotal = healthTechRows.length || 1;
+        const incumbentTotal = incumbentRows.length || 1;
+        byId("segmentCompareNote").textContent = `${fmtInt(healthTechRows.length)} health tech buyer deals vs. ${fmtInt(incumbentRows.length)} incumbent buyer deals in the current filter.`;
+        const labels = strategicMotionOrder.filter((label) => motionRows(healthTechRows, label).length || motionRows(incumbentRows, label).length);
+        if (!labels.length) {
+          byId("segmentMotionCompare").innerHTML = `<div class="empty-note">No health tech or incumbent rows in the current filter.</div>`;
+          return;
+        }
+        byId("segmentMotionCompare").innerHTML = `
+          <div class="comparison-legend">
+            <span class="legend-item"><span class="legend-swatch" style="background:${colors[1]}"></span>Health Tech</span>
+            <span class="legend-item"><span class="legend-swatch" style="background:${colors[0]}"></span>Incumbent</span>
+          </div>
+          ${labels
+            .map((label) => {
+              const healthTech = motionRows(healthTechRows, label).length;
+              const incumbent = motionRows(incumbentRows, label).length;
+              const healthTechPct = (healthTech / healthTechTotal) * 100;
+              const incumbentPct = (incumbent / incumbentTotal) * 100;
+              return `<div class="compare-row">
+                <div class="compare-label" title="${escapeHtml(label)}">${escapeHtml(label)}</div>
+                <div class="compare-bars">
+                  <div class="compare-line">
+                    <div class="compare-track"><div class="compare-fill" style="width:${healthTechPct}%;background:${colors[1]}"></div></div>
+                    <div class="compare-value">${Math.round(healthTechPct)}% / ${fmtInt(healthTech)}</div>
+                  </div>
+                  <div class="compare-line">
+                    <div class="compare-track"><div class="compare-fill" style="width:${incumbentPct}%;background:${colors[0]}"></div></div>
+                    <div class="compare-value">${Math.round(incumbentPct)}% / ${fmtInt(incumbent)}</div>
+                  </div>
+                </div>
+              </div>`;
+            })
+            .join("")}`;
+      }
+
       function renderRollupChart(rows) {
         const canvas = byId("rollupChart");
         const ctx = canvas.getContext("2d");
@@ -1443,7 +1685,7 @@
         canvas.height = rect.height * dpr;
         ctx.scale(dpr, dpr);
         ctx.clearRect(0, 0, rect.width, rect.height);
-        const entries = countBy(rows, "acquirerCategory");
+        const entries = orderEntries(countBy(rows, "acquirerCategory"), segmentOrder);
         const total = entries.reduce((sum, [, value]) => sum + value, 0) || 1;
         const radius = Math.min(rect.width, rect.height) * 0.31;
         const cx = rect.width * 0.34;
@@ -1497,23 +1739,22 @@
           "Health Tech": colors[1],
           "Other": colors[2],
           "PE": colors[3],
+          "Tech": colors[4],
+          "Financial Vehicle": "#8f7350",
         };
         return colorMap[label] || colors[4];
       }
 
-      function productColor(label) {
+      function motionColor(label) {
         const palette = {
-          "Care Delivery & Patient Access": "#05878a",
-          "Diagnostics, Imaging & Lab Testing": "#4259a0",
-          "Provider Workflow & Admin Infrastructure": "#6d275d",
-          "Life Sciences R&D & Evidence": "#c281d1",
-          "Medical Devices, Procedures & Simulation": "#f2a51b",
-          "Therapeutics & Disease Management": "#1e1503",
-          "Medication, Pharmacy & Benefits Management": "#bb4198",
-          "AI, Data & Analytics Infrastructure": "#526fc8",
-          "Consumer Engagement & Wellness": "#d9b0df",
-          "Platform / Suite Consolidation": "#616161",
-          "Other Product Expansion": "#aaa",
+          "Adjacent capability expansion": "#05878a",
+          "Asset / pipeline acquisition": "#6d275d",
+          "AI & automation capability": "#f2a51b",
+          "Customer / revenue / scale expansion": "#4259a0",
+          "Geographic / market entry": "#c281d1",
+          "New customer segment / channel": "#bb4198",
+          "Vertical integration": "#1e1503",
+          "Other / unclear": "#aaa",
         };
         return palette[label] || colors[4];
       }
@@ -1521,12 +1762,12 @@
       function renderSankey(rows) {
         const chart = byId("sankeyChart");
         const flowsByKey = new Map();
-        const productRows = rows.filter((row) => row.productExpansionType && row.productExpansionType !== "Not product expansion");
-        for (const row of productRows) {
+        const motionSourceRows = rows.filter((row) => row.strategicMotionPrimary);
+        for (const row of motionSourceRows) {
           const weight = state.sankeyMetric === "value" ? Number(row.dealSize || 0) : 1;
           if (!weight) continue;
           const source = row.acquirerCategory || "Other";
-          const target = row.productExpansionType || "Other Product Expansion";
+          const target = row.strategicMotionPrimary || "Other / unclear";
           const key = `${source}||${target}`;
           flowsByKey.set(key, (flowsByKey.get(key) || 0) + weight);
         }
@@ -1536,12 +1777,10 @@
           return { source, target, value };
         });
         if (!flows.length) {
-          chart.innerHTML = `<div class="sankey-empty">No product expansion rows in the current filter.</div>`;
+          chart.innerHTML = `<div class="sankey-empty">No strategic motion rows in the current filter.</div>`;
           return;
         }
 
-        const segmentOrder = ["Health Tech", "Incumbent", "PE", "Other"];
-        const productOrder = (payload.productExpansionTaxonomy || []).map((item) => item.name);
         const leftTotals = new Map();
         const rightTotals = new Map();
         for (const flow of flows) {
@@ -1549,11 +1788,9 @@
           rightTotals.set(flow.target, (rightTotals.get(flow.target) || 0) + flow.value);
         }
 
-        const leftLabels = [...leftTotals.keys()].sort((a, b) => segmentOrder.indexOf(a) - segmentOrder.indexOf(b));
+        const leftLabels = [...leftTotals.keys()].sort((a, b) => orderIndex(a, segmentOrder) - orderIndex(b, segmentOrder) || a.localeCompare(b));
         const rightLabels = [...rightTotals.keys()].sort((a, b) => {
-          const ai = productOrder.indexOf(a);
-          const bi = productOrder.indexOf(b);
-          return (ai === -1 ? 99 : ai) - (bi === -1 ? 99 : bi) || a.localeCompare(b);
+          return orderIndex(a, strategicMotionOrder) - orderIndex(b, strategicMotionOrder) || a.localeCompare(b);
         });
 
         const width = 900;
@@ -1606,7 +1843,7 @@
         function nodeMarkup(nodes, x, labelSide) {
           return [...nodes.values()]
             .map((node) => {
-              const color = labelSide === "left" ? segmentColor(node.label) : productColor(node.label);
+              const color = labelSide === "left" ? segmentColor(node.label) : motionColor(node.label);
               const labelX = labelSide === "left" ? x + nodeW + 10 : x + nodeW + 10;
               const anchor = "start";
               const label = shortLabel(node.label, labelSide === "left" ? 24 : 30);
@@ -1619,8 +1856,8 @@
             .join("");
         }
 
-        const metricNote = state.sankeyMetric === "value" ? "Product expansion rows with disclosed value, USD mm equivalent" : "Product expansion deal count";
-        chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Buyer segment to product expansion type flow">
+        const metricNote = state.sankeyMetric === "value" ? "Primary strategic motions with disclosed value, USD mm equivalent" : "Primary strategic motion deal count";
+        chart.innerHTML = `<svg viewBox="0 0 ${width} ${height}" role="img" aria-label="Buyer segment to primary strategic motion flow">
           <text x="24" y="19" fill="#616161" font-size="12">${metricNote}</text>
           ${paths}
           ${nodeMarkup(leftNodes, leftX, "left")}
@@ -1713,60 +1950,14 @@
               <td><span class="pill ${pillClass(row.acquirerCategory)}">${escapeHtml(row.acquirerCategory)}</span></td>
               <td><span class="pill geo">${escapeHtml(row.geoPairStatus || "Unknown")}</span></td>
               <td>${row.aiMentioned ? `<span class="pill ai" title="${escapeHtml(row.aiMentionEvidence)}">AI</span>` : `<span class="muted">-</span>`}</td>
-              <td>${escapeHtml(row.rationaleCategory)}</td>
-              <td>${row.productExpansionType !== "Not product expansion" ? `<span class="pill">${escapeHtml(row.productExpansionType)}</span>` : `<span class="muted">-</span>`}</td>
-              <td><div class="quote">${escapeHtml(row.rationaleTheme || row.rationaleQuote || "No rationale captured")}</div></td>
+              <td><span class="pill">${escapeHtml(row.strategicMotionPrimary || row.rationaleCategory)}</span></td>
+              <td>${row.strategicMotionSecondary ? `<span class="pill">${escapeHtml(row.strategicMotionSecondary)}</span>` : `<span class="muted">-</span>`}</td>
+              <td><div class="quote">${escapeHtml(row.motionRationale || row.rationaleTheme || row.rationaleQuote || "No rationale captured")}</div></td>
               <td>${source}</td>
               <td>${row.hasQaFlag ? `<span class="qa" title="${escapeHtml(row.qaFlags)}">Review</span>` : `<span class="muted">OK</span>`}</td>
             </tr>`;
           })
           .join("");
-      }
-
-      function downloadCsv(rows) {
-        const headers = [
-          "dealId",
-          "acquirer",
-          "buyerCountry",
-          "buyerRegion",
-          "target",
-          "acquiredCountry",
-          "acquiredRegion",
-          "geoPairStatus",
-          "acquirerType",
-          "acquirerCategory",
-          "primaryRationaleCategory",
-          "sourceRationaleCategory",
-          "aiMentioned",
-          "aiMentionEvidence",
-          "productExpansionType",
-          "dealSize",
-          "rationaleTheme",
-          "sourceType",
-          "sourceUrl",
-          "qaFlags",
-        ];
-        const csv = [headers.join(",")]
-          .concat(
-            rows.map((row) =>
-              headers
-                .map((header) => {
-                  const value = row[header] ?? "";
-                  return `"${String(value).replaceAll('"', '""')}"`;
-                })
-                .join(",")
-            )
-          )
-          .join("\n");
-        const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement("a");
-        link.href = url;
-        link.download = "aytza-mna-dashboard-filtered.csv";
-        document.body.appendChild(link);
-        link.click();
-        link.remove();
-        URL.revokeObjectURL(url);
       }
 
       window.addEventListener("resize", () => {

@@ -2,15 +2,15 @@
 
 Live dashboard for the enriched 2025-2026 M&A rationale workbook.
 
-Current build includes primary rationale taxonomy, product-expansion subcategories, explicit AI mention flags, buyer/acquired HQ geography, cross-border analysis, and a public Google Sheet data source.
+Current build includes buyer segment mix, granular primary/secondary strategic-motion rationale, health-tech-vs-incumbent rationale comparison, explicit AI mention flags, buyer/acquired HQ geography, cross-border analysis, and a public Google Sheet data source.
 
 ## Live Google Sheet Source
 
-The public dashboard loads the `Dashboard_Data` tab from [Aytza M&A Dashboard Data](https://docs.google.com/spreadsheets/d/1ey7OBRkaaU9OnRqlPE7DGEvDOYwomV3OO2xvrcwMfy0/edit) at page load. If the tab is unavailable or not shared publicly/readable through Google Visualization, the dashboard falls back to the generated static dataset.
+The public dashboard loads the `Dashboard_Data` tab from [Aytza_MnA_Strategic_Motions_Full](https://docs.google.com/spreadsheets/d/1a6VBIqUISlTlemZ5qGnPt56QwB9IV39_NGfJn8nJzMc/edit) at page load. If the tab is unavailable or not shared publicly/readable through Google Visualization, the dashboard falls back to the generated static dataset and shows a blocked-feed warning.
 
 Sheet edits appear in the dashboard after a browser refresh, the dashboard's `Refresh Live Data` action, or the automatic one-minute refresh while the page is open.
 
-`Buyer Segment` is the dashboard's authoritative segment field. The dashboard only rolls up from `Acquirer Type` when `Buyer Segment` is blank.
+`Buyer Segment` is the dashboard's authoritative segment field. The dashboard only rolls up from `Acquirer Type` when `Buyer Segment` is blank. The article-facing rationale charts use `Strategic Motion (Primary)` and `Strategic Motion (Secondary)`, with `Other / unclear` ordered last.
 
 For the live source to work on GitHub Pages, the source must be a native Google Sheet and the tab must be readable by the browser, ideally shared as viewable by anyone with the link. Uploaded Excel files opened in Drive are not reliable as a live source.
 
