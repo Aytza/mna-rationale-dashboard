@@ -1033,14 +1033,14 @@
       };
       const segmentOrder = ["Health Tech", "Incumbent", "PE", "Tech", "Financial Vehicle", "Other"];
       const strategicMotionOrder = [
-        "Adjacent capability expansion",
-        "Asset / pipeline acquisition",
-        "AI & automation capability",
-        "Customer / revenue / scale expansion",
-        "Geographic / market entry",
-        "New customer segment / channel",
+        "Capability expansion",
+        "Pipeline acquisition",
+        "AI capability",
+        "Customer expansion",
+        "Geographic expansion",
+        "New segment or channel",
         "Vertical integration",
-        "Other / unclear",
+        "Other / unknown",
       ];
       const rollupByType = {
         "Health Tech": "Health Tech",
@@ -1187,7 +1187,7 @@
       function countBy(rows, key, split = false) {
         const counts = new Map();
         for (const row of rows) {
-          const values = split ? row[key] || ["other/unclear"] : [row[key] || "Unknown"];
+          const values = split ? row[key] || ["Other / unknown"] : [row[key] || "Unknown"];
           for (const value of values) counts.set(value, (counts.get(value) || 0) + 1);
         }
         return [...counts.entries()].sort((a, b) => b[1] - a[1]);
@@ -1210,7 +1210,7 @@
         const counts = new Map();
         for (const row of rows) {
           const values = splitSheetList(row[field]);
-          const motions = values.length ? values : includeBlankAsOther ? ["Other / unclear"] : [];
+          const motions = values.length ? values : includeBlankAsOther ? ["Other / unknown"] : [];
           for (const motion of motions) counts.set(motion, (counts.get(motion) || 0) + 1);
         }
         return orderEntries([...counts.entries()], strategicMotionOrder);
@@ -1327,17 +1327,24 @@
         const text = String(value || "").trim();
         if (!text) return "";
         const aliases = {
-          "Product / capability expansion": "Adjacent capability expansion",
-          "product/capability expansion": "Adjacent capability expansion",
-          "New customer / channel access": "New customer segment / channel",
-          "new customer base": "New customer segment / channel",
-          "Revenue expansion": "Customer / revenue / scale expansion",
-          "revenue expansion": "Customer / revenue / scale expansion",
-          "Geographic expansion": "Geographic / market entry",
-          "geographic expansion": "Geographic / market entry",
-          "other/unclear": "Other / unclear",
-          "Other / Unknown": "Other / unclear",
-          "Other Product Expansion": "Adjacent capability expansion",
+          "Adjacent capability expansion": "Capability expansion",
+          "Product / capability expansion": "Capability expansion",
+          "product/capability expansion": "Capability expansion",
+          "Other Product Expansion": "Capability expansion",
+          "Asset / pipeline acquisition": "Pipeline acquisition",
+          "AI & automation capability": "AI capability",
+          "Customer / revenue / scale expansion": "Customer expansion",
+          "Revenue expansion": "Customer expansion",
+          "revenue expansion": "Customer expansion",
+          "Geographic / market entry": "Geographic expansion",
+          "geographic expansion": "Geographic expansion",
+          "New customer segment / channel": "New segment or channel",
+          "New customer / channel access": "New segment or channel",
+          "new customer base": "New segment or channel",
+          "Other / unclear": "Other / unknown",
+          "other/unclear": "Other / unknown",
+          "Other / Unknown": "Other / unknown",
+          "other / unknown": "Other / unknown",
         };
         return aliases[text] || text;
       }
@@ -1378,7 +1385,7 @@
         row.buyerRegion = row.buyerCountry ? countryRegion(row.buyerCountry) : row.buyerRegion || "Unknown";
         row.geoPairStatus = computeGeoPair(row.buyerCountry, row.acquiredCountry);
         row.geoRoute = row.buyerRegion !== "Unknown" && row.acquiredRegion !== "Unknown" ? `${row.buyerRegion} -> ${row.acquiredRegion}` : "Unknown";
-        row.strategicMotionPrimary = normalizeStrategicMotionValue(row.strategicMotionPrimary || row.primaryRationaleCategory || row.rationaleCategory || "Other / unclear");
+        row.strategicMotionPrimary = normalizeStrategicMotionValue(row.strategicMotionPrimary || row.primaryRationaleCategory || row.rationaleCategory || "Other / unknown");
         row.strategicMotionSecondary = normalizeStrategicMotionList(row.strategicMotionSecondary || "");
         row.primaryRationaleCategory = row.strategicMotionPrimary;
         row.rationaleCategory = row.rationaleCategory || row.primaryRationaleCategory;
@@ -1767,14 +1774,14 @@
 
       function motionColor(label) {
         const palette = {
-          "Adjacent capability expansion": "#05878a",
-          "Asset / pipeline acquisition": "#6d275d",
-          "AI & automation capability": "#f2a51b",
-          "Customer / revenue / scale expansion": "#4259a0",
-          "Geographic / market entry": "#c281d1",
-          "New customer segment / channel": "#bb4198",
+          "Capability expansion": "#05878a",
+          "Pipeline acquisition": "#6d275d",
+          "AI capability": "#f2a51b",
+          "Customer expansion": "#4259a0",
+          "Geographic expansion": "#c281d1",
+          "New segment or channel": "#bb4198",
           "Vertical integration": "#1e1503",
-          "Other / unclear": "#aaa",
+          "Other / unknown": "#aaa",
         };
         return palette[label] || colors[4];
       }
@@ -1787,7 +1794,7 @@
           const weight = state.sankeyMetric === "value" ? Number(row.dealSize || 0) : 1;
           if (!weight) continue;
           const source = row.acquirerCategory || "Other";
-          const target = row.strategicMotionPrimary || "Other / unclear";
+          const target = row.strategicMotionPrimary || "Other / unknown";
           const key = `${source}||${target}`;
           flowsByKey.set(key, (flowsByKey.get(key) || 0) + weight);
         }
@@ -1924,8 +1931,8 @@
             note: "Geo, customer, or revenue expansion without product build",
           },
           {
-            id: "Other / unclear",
-            title: "Other / Unclear",
+            id: "Other / unknown",
+            title: "Other / Unknown",
             note: "No clear product or market expansion signal",
           },
         ];

@@ -10,7 +10,7 @@ The public dashboard loads the `Dashboard_Data` tab from [Aytza_MnA_Strategic_Mo
 
 Sheet edits appear in the dashboard after a browser refresh, the dashboard's `Refresh Live Data` action, or the automatic one-minute refresh while the page is open.
 
-`Buyer Segment` is the dashboard's authoritative segment field. The dashboard only rolls up from `Acquirer Type` when `Buyer Segment` is blank. The article-facing rationale charts use `Strategic Motion (Primary)` and `Strategic Motion (Secondary)`, with `Other / unclear` ordered last.
+`Buyer Segment` is the dashboard's authoritative segment field. The dashboard only rolls up from `Acquirer Type` when `Buyer Segment` is blank. The article-facing rationale charts use `Strategic Motion (Primary)` and `Strategic Motion (Secondary)`, with Sari's streamlined category names and `Other / unknown` ordered last.
 
 For the live source to work on GitHub Pages, the source must be a native Google Sheet and the tab must be readable by the browser, ideally shared as viewable by anyone with the link. Uploaded Excel files opened in Drive are not reliable as a live source.
 
