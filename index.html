@@ -289,7 +289,7 @@
 
       .grid {
         display: grid;
-        grid-template-columns: minmax(320px, 0.95fr) minmax(360px, 1.2fr) minmax(300px, 0.85fr);
+        grid-template-columns: minmax(280px, 0.72fr) repeat(2, minmax(390px, 1.1fr));
         gap: 14px;
         align-items: stretch;
         margin-bottom: 18px;
@@ -400,74 +400,70 @@
 
       .comparison-chart {
         display: grid;
-        gap: 12px;
-      }
-
-      .comparison-legend {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 12px;
-        color: var(--muted);
-        font-size: 12px;
-        margin-bottom: 2px;
-      }
-
-      .legend-item {
-        display: inline-flex;
-        align-items: center;
         gap: 6px;
       }
 
-      .legend-swatch {
-        width: 11px;
-        height: 11px;
-        border-radius: 999px;
-        border: 1px solid var(--line);
-      }
-
-      .compare-row {
+      .heatmap-row {
         display: grid;
-        grid-template-columns: minmax(138px, 180px) 1fr;
-        gap: 10px;
-        align-items: center;
+        grid-template-columns: minmax(132px, 1.35fr) minmax(74px, 0.76fr) minmax(74px, 0.76fr) minmax(68px, 0.66fr);
+        gap: 5px;
+        align-items: stretch;
       }
 
-      .compare-label {
+      .heatmap-head {
+        color: var(--muted);
+        font-size: 11px;
+        font-weight: 800;
+        line-height: 1.2;
+        text-transform: uppercase;
+      }
+
+      .heatmap-head > div {
+        padding: 0 6px 4px;
+      }
+
+      .heatmap-label {
+        border-top: 1px solid var(--line);
         color: var(--ink);
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-      }
-
-      .compare-bars {
-        display: grid;
-        gap: 6px;
-      }
-
-      .compare-line {
-        display: grid;
-        grid-template-columns: 1fr 78px;
-        gap: 8px;
+        display: flex;
         align-items: center;
+        font-weight: 700;
+        line-height: 1.2;
+        min-height: 48px;
+        padding: 8px 6px 8px 0;
       }
 
-      .compare-track {
-        height: 10px;
-        background: var(--soft);
-        border-radius: 999px;
-        overflow: hidden;
+      .heatmap-cell {
+        border: 1px solid rgba(30, 21, 3, 0.16);
+        color: var(--dark-purple);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        min-height: 48px;
+        padding: 8px 7px;
       }
 
-      .compare-fill {
-        height: 100%;
-        border-radius: inherit;
+      .heatmap-cell.soft {
+        background: #f8f4f1;
       }
 
-      .compare-value {
+      .heatmap-value {
+        font-family: "Outfit", sans-serif;
+        font-size: 16px;
+        font-weight: 800;
+        line-height: 1;
+      }
+
+      .heatmap-sub {
         color: var(--muted);
-        text-align: right;
-        font-size: 12px;
-        font-variant-numeric: tabular-nums;
+        font-size: 11px;
+        line-height: 1.2;
+        margin-top: 5px;
+        overflow-wrap: anywhere;
+      }
+
+      .heatmap-skew {
+        text-align: center;
       }
 
       .empty-note {
@@ -782,7 +778,7 @@
           padding: 9px;
         }
 
-        .compare-row {
+        .heatmap-row {
           grid-template-columns: 1fr;
         }
       }
@@ -1599,6 +1595,40 @@
           .join("");
       }
 
+      function rgbaFromHex(hex, alpha) {
+        const normalized = String(hex || "#000000").replace("#", "");
+        const value = normalized.length === 3 ? normalized.split("").map((char) => char + char).join("") : normalized.padEnd(6, "0").slice(0, 6);
+        const number = Number.parseInt(value, 16);
+        const r = (number >> 16) & 255;
+        const g = (number >> 8) & 255;
+        const b = number & 255;
+        return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+      }
+
+      function heatStyle(color, pct) {
+        const alpha = Math.min(0.76, 0.08 + (Math.max(0, pct) / 100) * 1.05);
+        return `background:${rgbaFromHex(color, alpha)};border-color:${rgbaFromHex(color, Math.min(0.58, alpha + 0.12))}`;
+      }
+
+      function heatCell(value, total, color) {
+        const pct = total ? (value / total) * 100 : 0;
+        return `<div class="heatmap-cell" style="${heatStyle(color, pct)}">
+          <div class="heatmap-value">${Math.round(pct)}%</div>
+          <div class="heatmap-sub">${fmtInt(value)} deals</div>
+        </div>`;
+      }
+
+      function skewCell(delta, positiveLabel, negativeLabel, positiveColor, negativeColor) {
+        const absDelta = Math.abs(delta);
+        const label = absDelta < 0.5 ? "Even" : delta > 0 ? positiveLabel : negativeLabel;
+        const color = absDelta < 0.5 ? "#616161" : delta > 0 ? positiveColor : negativeColor;
+        const signed = absDelta < 0.5 ? "0 pp" : `${delta > 0 ? "+" : ""}${Math.round(delta)} pp`;
+        return `<div class="heatmap-cell heatmap-skew" style="${heatStyle(color, Math.min(100, absDelta * 3))}">
+          <div class="heatmap-value">${escapeHtml(signed)}</div>
+          <div class="heatmap-sub">${escapeHtml(label)}</div>
+        </div>`;
+      }
+
       function renderMotionComparison(rows) {
         const primaryCounts = new Map(countMotion(rows, "strategicMotionPrimary", { includeBlankAsOther: true }));
         const secondaryCounts = new Map(countMotion(rows, "strategicMotionSecondary"));
@@ -1610,9 +1640,11 @@
           return;
         }
         byId("motionComparisonBars").innerHTML = `
-          <div class="comparison-legend">
-            <span class="legend-item"><span class="legend-swatch" style="background:${colors[0]}"></span>Primary, n=${fmtInt(rows.length)}</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:${colors[1]}"></span>Secondary, n=${fmtInt(secondaryTotal)}</span>
+          <div class="heatmap-row heatmap-head">
+            <div>Strategic motion</div>
+            <div>Primary n=${fmtInt(rows.length)}</div>
+            <div>Secondary n=${fmtInt(secondaryTotal)}</div>
+            <div>Skew</div>
           </div>
           ${labels
             .map((label) => {
@@ -1620,18 +1652,11 @@
               const secondary = secondaryCounts.get(label) || 0;
               const primaryPct = (primary / primaryTotal) * 100;
               const secondaryPct = (secondary / secondaryTotal) * 100;
-              return `<div class="compare-row">
-                <div class="compare-label" title="${escapeHtml(label)}">${escapeHtml(label)}</div>
-                <div class="compare-bars">
-                  <div class="compare-line">
-                    <div class="compare-track"><div class="compare-fill" style="width:${primaryPct}%;background:${colors[0]}"></div></div>
-                    <div class="compare-value">${Math.round(primaryPct)}% / ${fmtInt(primary)}</div>
-                  </div>
-                  <div class="compare-line">
-                    <div class="compare-track"><div class="compare-fill" style="width:${secondaryPct}%;background:${colors[1]}"></div></div>
-                    <div class="compare-value">${Math.round(secondaryPct)}% / ${fmtInt(secondary)}</div>
-                  </div>
-                </div>
+              return `<div class="heatmap-row">
+                <div class="heatmap-label">${escapeHtml(label)}</div>
+                ${heatCell(primary, primaryTotal, colors[0])}
+                ${heatCell(secondary, secondaryTotal, colors[1])}
+                ${skewCell(primaryPct - secondaryPct, "Primary", "Secondary", colors[0], colors[1])}
               </div>`;
             })
             .join("")}`;
@@ -1649,9 +1674,11 @@
           return;
         }
         byId("segmentMotionCompare").innerHTML = `
-          <div class="comparison-legend">
-            <span class="legend-item"><span class="legend-swatch" style="background:${colors[1]}"></span>Health Tech</span>
-            <span class="legend-item"><span class="legend-swatch" style="background:${colors[0]}"></span>Incumbent</span>
+          <div class="heatmap-row heatmap-head">
+            <div>Strategic motion</div>
+            <div>Health tech n=${fmtInt(healthTechRows.length)}</div>
+            <div>Incumbent n=${fmtInt(incumbentRows.length)}</div>
+            <div>Skew</div>
           </div>
           ${labels
             .map((label) => {
@@ -1659,18 +1686,11 @@
               const incumbent = motionRows(incumbentRows, label).length;
               const healthTechPct = (healthTech / healthTechTotal) * 100;
               const incumbentPct = (incumbent / incumbentTotal) * 100;
-              return `<div class="compare-row">
-                <div class="compare-label" title="${escapeHtml(label)}">${escapeHtml(label)}</div>
-                <div class="compare-bars">
-                  <div class="compare-line">
-                    <div class="compare-track"><div class="compare-fill" style="width:${healthTechPct}%;background:${colors[1]}"></div></div>
-                    <div class="compare-value">${Math.round(healthTechPct)}% / ${fmtInt(healthTech)}</div>
-                  </div>
-                  <div class="compare-line">
-                    <div class="compare-track"><div class="compare-fill" style="width:${incumbentPct}%;background:${colors[0]}"></div></div>
-                    <div class="compare-value">${Math.round(incumbentPct)}% / ${fmtInt(incumbent)}</div>
-                  </div>
-                </div>
+              return `<div class="heatmap-row">
+                <div class="heatmap-label">${escapeHtml(label)}</div>
+                ${heatCell(healthTech, healthTechTotal, colors[1])}
+                ${heatCell(incumbent, incumbentTotal, colors[0])}
+                ${skewCell(healthTechPct - incumbentPct, "Health tech", "Incumbent", colors[1], colors[0])}
               </div>`;
             })
             .join("")}`;
