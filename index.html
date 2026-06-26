@@ -344,6 +344,19 @@
         padding: 0;
       }
 
+      .expand-chart {
+        width: auto;
+        min-width: 66px;
+        min-height: 32px;
+        border-radius: 999px;
+        background: #fff;
+        color: var(--dark-purple);
+        border-color: var(--dark-purple);
+        font-size: 12px;
+        line-height: 1.1;
+        padding: 6px 10px;
+      }
+
       .compact-select {
         width: auto;
         min-width: 150px;
@@ -357,6 +370,12 @@
       .bars {
         display: grid;
         gap: 10px;
+      }
+
+      .bar-columns {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
       }
 
       .bar-section + .bar-section {
@@ -703,6 +722,202 @@
         font-size: 12px;
       }
 
+      body.modal-open {
+        overflow: hidden;
+      }
+
+      .chart-modal {
+        position: fixed;
+        inset: 0;
+        display: none;
+        z-index: 30;
+      }
+
+      .chart-modal.open {
+        display: block;
+      }
+
+      .chart-modal-backdrop {
+        position: absolute;
+        inset: 0;
+        background: rgba(30, 21, 3, 0.56);
+      }
+
+      .chart-modal-panel {
+        position: absolute;
+        inset: 24px;
+        display: flex;
+        flex-direction: column;
+        background: var(--panel);
+        border: 1px solid var(--line);
+        box-shadow: 12px 12px 0 rgba(109, 39, 93, 0.18);
+        overflow: hidden;
+      }
+
+      .chart-modal-head {
+        display: flex;
+        align-items: flex-start;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 16px 18px;
+        border-bottom: 1px solid var(--line);
+      }
+
+      .chart-modal-title-wrap {
+        min-width: 220px;
+        flex: 1;
+      }
+
+      .chart-modal-head h2 {
+        margin: 0;
+        font-family: "Outfit", sans-serif;
+        font-size: 22px;
+        font-weight: 800;
+      }
+
+      .chart-modal-actions {
+        display: flex;
+        align-items: flex-end;
+        justify-content: flex-end;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      .export-controls {
+        display: flex;
+        align-items: flex-end;
+        gap: 8px;
+        flex-wrap: wrap;
+      }
+
+      .export-field {
+        display: grid;
+        gap: 3px;
+      }
+
+      .export-field span {
+        color: var(--muted);
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: 0;
+        line-height: 1;
+        text-transform: uppercase;
+      }
+
+      .export-field select {
+        min-height: 34px;
+        min-width: 116px;
+        padding: 6px 28px 6px 9px;
+      }
+
+      .chart-modal-download {
+        width: auto;
+        min-width: 94px;
+        min-height: 36px;
+        border-radius: 999px;
+        background: var(--dark-purple);
+        border-color: var(--dark-purple);
+        color: #fff;
+        font-size: 13px;
+        line-height: 1;
+        padding: 8px 14px;
+      }
+
+      .chart-modal-close {
+        width: auto;
+        min-width: 64px;
+        min-height: 36px;
+        border-radius: 999px;
+        background: var(--orange);
+        border-color: var(--ink);
+        color: var(--ink);
+        font-size: 13px;
+        line-height: 1;
+        padding: 8px 14px;
+      }
+
+      .export-status {
+        color: var(--muted);
+        font-size: 12px;
+        margin-top: 5px;
+        min-height: 17px;
+      }
+
+      .chart-modal-body {
+        flex: 1;
+        overflow: auto;
+        padding: 18px;
+        background: #f4efec;
+        display: flex;
+        align-items: flex-start;
+        justify-content: center;
+      }
+
+      .export-preview-artboard {
+        width: var(--export-preview-width, 100%);
+        max-width: 100%;
+        min-height: min(72vh, var(--export-preview-height, 760px));
+        aspect-ratio: var(--export-preview-aspect, auto);
+        background: var(--export-preview-bg, var(--panel));
+        border: 1px dashed rgba(30, 21, 3, 0.28);
+        box-shadow: 6px 6px 0 rgba(109, 39, 93, 0.09);
+        overflow: hidden;
+        padding: 0;
+        transition: width 160ms ease, min-height 160ms ease, background 160ms ease;
+      }
+
+      .export-preview-artboard.transparent-preview {
+        background-color: #fff;
+        background-image:
+          linear-gradient(45deg, rgba(30, 21, 3, 0.08) 25%, transparent 25%),
+          linear-gradient(-45deg, rgba(30, 21, 3, 0.08) 25%, transparent 25%),
+          linear-gradient(45deg, transparent 75%, rgba(30, 21, 3, 0.08) 75%),
+          linear-gradient(-45deg, transparent 75%, rgba(30, 21, 3, 0.08) 75%);
+        background-position: 0 0, 0 10px, 10px -10px, -10px 0;
+        background-size: 20px 20px;
+      }
+
+      .export-preview-canvas svg {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+
+      .export-source {
+        position: fixed;
+        left: -10000px;
+        top: 0;
+        width: 1100px;
+        min-height: 900px;
+        opacity: 0;
+        pointer-events: none;
+      }
+
+      .export-source .canvas-wrap {
+        height: 680px;
+      }
+
+      .chart-modal-body .canvas-wrap {
+        height: min(68vh, 680px);
+      }
+
+      .chart-modal-body .sankey-chart {
+        min-height: 0;
+      }
+
+      .chart-modal-body .comparison-chart,
+      .chart-modal-body .bars {
+        gap: 12px;
+      }
+
+      .chart-modal-body .bar-row {
+        grid-template-columns: minmax(190px, 0.42fr) 1fr 58px;
+      }
+
+      .chart-modal-body .heatmap-row {
+        grid-template-columns: minmax(220px, 1.4fr) minmax(150px, 0.9fr) minmax(150px, 0.9fr) minmax(130px, 0.76fr);
+      }
+
       @media (max-width: 1180px) {
         .kpis {
           grid-template-columns: repeat(3, 1fr);
@@ -721,6 +936,10 @@
         }
 
         .geo-grid {
+          grid-template-columns: 1fr;
+        }
+
+        .bar-columns {
           grid-template-columns: 1fr;
         }
 
@@ -779,6 +998,27 @@
         }
 
         .heatmap-row {
+          grid-template-columns: 1fr;
+        }
+
+        .chart-modal-panel {
+          inset: 10px;
+        }
+
+        .chart-modal-head {
+          display: block;
+        }
+
+        .chart-modal-actions {
+          justify-content: flex-start;
+          margin-top: 12px;
+        }
+
+        .export-field select {
+          min-width: 104px;
+        }
+
+        .chart-modal-body .heatmap-row {
           grid-template-columns: 1fr;
         }
       }
@@ -899,7 +1139,10 @@
 
         <section class="grid" aria-label="Charts">
           <article class="panel">
-            <h2>Buyer Segment Mix</h2>
+            <div class="panel-title-row">
+              <h2>Buyer Segment Mix</h2>
+              <button class="expand-chart" type="button" data-chart="rollup" aria-label="Expand Buyer Segment Mix">Expand</button>
+            </div>
             <div class="panel-body">
               <div class="canvas-wrap">
                 <canvas id="rollupChart" width="500" height="270" aria-label="Buyer segment mix chart"></canvas>
@@ -907,13 +1150,19 @@
             </div>
           </article>
           <article class="panel">
-            <h2>Primary vs Secondary Rationale</h2>
+            <div class="panel-title-row">
+              <h2>Primary vs Secondary Rationale</h2>
+              <button class="expand-chart" type="button" data-chart="motionComparison" aria-label="Expand Primary vs Secondary Rationale">Expand</button>
+            </div>
             <div class="panel-body">
               <div id="motionComparisonBars" class="comparison-chart"></div>
             </div>
           </article>
           <article class="panel">
-            <h2>Health Tech vs Incumbent</h2>
+            <div class="panel-title-row">
+              <h2>Health Tech vs Incumbent</h2>
+              <button class="expand-chart" type="button" data-chart="segmentCompare" aria-label="Expand Health Tech vs Incumbent">Expand</button>
+            </div>
             <div class="panel-body">
               <div class="matrix-note" id="segmentCompareNote"></div>
               <div id="segmentMotionCompare" class="comparison-chart"></div>
@@ -925,17 +1174,23 @@
           <article class="panel sankey-panel">
             <div class="panel-title-row">
               <h2>Buyer Segment to Primary Strategic Motion</h2>
-              <select id="sankeyMetric" class="compact-select" aria-label="Sankey metric">
-                <option value="count">Deal count</option>
-                <option value="value">Disclosed value</option>
-              </select>
+              <div style="display: flex; gap: 8px; align-items: center">
+                <select id="sankeyMetric" class="compact-select" aria-label="Sankey metric">
+                  <option value="count">Deal count</option>
+                  <option value="value">Disclosed value</option>
+                </select>
+                <button class="expand-chart" type="button" data-chart="sankey" aria-label="Expand Buyer Segment to Primary Strategic Motion">Expand</button>
+              </div>
             </div>
             <div class="panel-body">
               <div id="sankeyChart" class="sankey-chart"></div>
             </div>
           </article>
           <article class="panel">
-            <h2>AI Mention Analysis</h2>
+            <div class="panel-title-row">
+              <h2>AI Mention Analysis</h2>
+              <button class="expand-chart" type="button" data-chart="ai" aria-label="Expand AI Mention Analysis">Expand</button>
+            </div>
             <div class="panel-body">
               <div class="matrix-note" id="aiNote"></div>
               <div class="bar-section">
@@ -944,16 +1199,31 @@
             </div>
           </article>
           <article class="panel">
-            <h2>Acquirer Types</h2>
+            <div class="panel-title-row">
+              <h2>Acquirer Types</h2>
+              <button class="expand-chart" type="button" data-chart="types" aria-label="Expand Acquirer Types">Expand</button>
+            </div>
             <div class="panel-body">
               <div id="typeBars" class="bars"></div>
+            </div>
+          </article>
+          <article class="panel">
+            <div class="panel-title-row">
+              <h2>Primary Rationale by Motion</h2>
+              <button class="expand-chart" type="button" data-chart="motionPrimaryBars" aria-label="Expand Primary Rationale by Motion">Expand</button>
+            </div>
+            <div class="panel-body">
+              <div id="motionPrimaryBars" class="bars"></div>
             </div>
           </article>
         </section>
 
         <section class="geo-grid" aria-label="Geography analysis">
           <article class="panel">
-            <h2>Acquired Company HQ</h2>
+            <div class="panel-title-row">
+              <h2>Acquired Company HQ</h2>
+              <button class="expand-chart" type="button" data-chart="acquiredGeo" aria-label="Expand Acquired Company HQ">Expand</button>
+            </div>
             <div class="panel-body">
               <div class="bar-section">
                 <div class="matrix-note">Regions</div>
@@ -966,14 +1236,20 @@
             </div>
           </article>
           <article class="panel">
-            <h2>Buyer HQ</h2>
+            <div class="panel-title-row">
+              <h2>Buyer HQ</h2>
+              <button class="expand-chart" type="button" data-chart="buyerGeo" aria-label="Expand Buyer HQ">Expand</button>
+            </div>
             <div class="panel-body">
               <div class="matrix-note" id="buyerGeoNote"></div>
               <div id="buyerCountryBars" class="bars"></div>
             </div>
           </article>
           <article class="panel">
-            <h2>Cross-Border View</h2>
+            <div class="panel-title-row">
+              <h2>Cross-Border View</h2>
+              <button class="expand-chart" type="button" data-chart="crossBorder" aria-label="Expand Cross-Border View">Expand</button>
+            </div>
             <div class="panel-body">
               <div class="bar-section">
                 <div class="matrix-note">Buyer HQ vs. acquired HQ</div>
@@ -1018,6 +1294,49 @@
           Live dashboard for GitHub Pages reading the public Dashboard_Data Google Sheet, with a static workbook fallback.
         </footer>
       </main>
+    </div>
+
+    <div class="chart-modal" id="chartModal" role="dialog" aria-modal="true" aria-labelledby="chartModalTitle">
+      <div class="chart-modal-backdrop" id="chartModalBackdrop"></div>
+      <div class="chart-modal-panel">
+        <div class="chart-modal-head">
+          <div class="chart-modal-title-wrap">
+            <h2 id="chartModalTitle"></h2>
+            <div class="export-status" id="exportStatus" aria-live="polite"></div>
+          </div>
+          <div class="chart-modal-actions">
+            <div class="export-controls" aria-label="Download options">
+              <label class="export-field" for="exportSize">
+                <span>Size</span>
+                <select id="exportSize">
+                  <option value="article-wide">Article wide</option>
+                  <option value="article-square">Square</option>
+                  <option value="article-tall">Tall</option>
+                  <option value="social-wide">16:9 wide</option>
+                </select>
+              </label>
+              <label class="export-field" for="exportBackground">
+                <span>Background</span>
+                <select id="exportBackground">
+                  <option value="cream">Aytza cream</option>
+                  <option value="white">White</option>
+                  <option value="transparent">Transparent</option>
+                </select>
+              </label>
+              <label class="export-field" for="exportFormat">
+                <span>Format</span>
+                <select id="exportFormat">
+                  <option value="png">PNG</option>
+                  <option value="svg">SVG</option>
+                </select>
+              </label>
+            </div>
+            <button class="chart-modal-download" type="button" id="downloadChart">Download</button>
+            <button class="chart-modal-close" type="button" id="chartModalClose" aria-label="Close expanded chart">Close</button>
+          </div>
+        </div>
+        <div class="chart-modal-body" id="chartModalBody"></div>
+      </div>
     </div>
 
     <script src="data.js"></script>
@@ -1167,6 +1486,18 @@
         qa: "all",
         sankeyMetric: "count",
       };
+      const exportSizes = {
+        "article-wide": { label: "Article wide", width: 1400, height: 900 },
+        "article-square": { label: "Square", width: 1200, height: 1200 },
+        "article-tall": { label: "Tall", width: 1000, height: 1400 },
+        "social-wide": { label: "16:9 wide", width: 1600, height: 900 },
+      };
+      const exportBackgrounds = {
+        cream: "#fbf7f4",
+        white: "#ffffff",
+        transparent: "transparent",
+      };
+      let activeModalChartKey = "";
 
       const byId = (id) => document.getElementById(id);
       const fmtInt = (value) => new Intl.NumberFormat("en-US").format(value || 0);
@@ -1522,6 +1853,21 @@
           render();
         });
         byId("refreshLiveData").addEventListener("click", refreshLiveData);
+        document.querySelectorAll("[data-chart]").forEach((button) => {
+          button.addEventListener("click", () => openChartModal(button.dataset.chart));
+        });
+        byId("chartModalClose").addEventListener("click", closeChartModal);
+        byId("chartModalBackdrop").addEventListener("click", closeChartModal);
+        byId("downloadChart").addEventListener("click", downloadExpandedChart);
+        ["exportSize", "exportBackground", "exportFormat"].forEach((id) => {
+          byId(id).addEventListener("change", () => {
+            updateExportPreview();
+            renderActiveModalChart();
+          });
+        });
+        document.addEventListener("keydown", (event) => {
+          if (event.key === "Escape") closeChartModal();
+        });
         render();
         if (!isLiveDataDisabled()) {
           window.setInterval(() => {
@@ -1581,6 +1927,7 @@
         renderAiPanel(rows);
         renderGeography(rows);
         renderSankey(rows);
+        renderMotionPrimaryBars(rows);
         renderTable(rows);
       }
 
@@ -1636,17 +1983,17 @@
         </div>`;
       }
 
-      function renderMotionComparison(rows) {
+      function renderMotionComparison(rows, targetId = "motionComparisonBars") {
         const primaryCounts = new Map(countMotion(rows, "strategicMotionPrimary", { includeBlankAsOther: true }));
         const secondaryCounts = new Map(countMotion(rows, "strategicMotionSecondary"));
         const primaryTotal = rows.length || 1;
         const secondaryTotal = [...secondaryCounts.values()].reduce((sum, value) => sum + value, 0) || 1;
         const labels = strategicMotionOrder.filter((label) => primaryCounts.has(label) || secondaryCounts.has(label));
         if (!labels.length) {
-          byId("motionComparisonBars").innerHTML = `<div class="empty-note">No rationale rows in the current filter.</div>`;
+          byId(targetId).innerHTML = `<div class="empty-note">No rationale rows in the current filter.</div>`;
           return;
         }
-        byId("motionComparisonBars").innerHTML = `
+        byId(targetId).innerHTML = `
           <div class="heatmap-row heatmap-head">
             <div>Strategic motion</div>
             <div>Primary n=${fmtInt(rows.length)}</div>
@@ -1669,18 +2016,18 @@
             .join("")}`;
       }
 
-      function renderSegmentMotionCompare(rows) {
+      function renderSegmentMotionCompare(rows, noteId = "segmentCompareNote", targetId = "segmentMotionCompare") {
         const healthTechRows = rows.filter((row) => row.acquirerCategory === "Health Tech");
         const incumbentRows = rows.filter((row) => row.acquirerCategory === "Incumbent");
         const healthTechTotal = healthTechRows.length || 1;
         const incumbentTotal = incumbentRows.length || 1;
-        byId("segmentCompareNote").textContent = `${fmtInt(healthTechRows.length)} health tech buyer deals vs. ${fmtInt(incumbentRows.length)} incumbent buyer deals in the current filter.`;
+        byId(noteId).textContent = `${fmtInt(healthTechRows.length)} health tech buyer deals vs. ${fmtInt(incumbentRows.length)} incumbent buyer deals in the current filter.`;
         const labels = strategicMotionOrder.filter((label) => motionRows(healthTechRows, label).length || motionRows(incumbentRows, label).length);
         if (!labels.length) {
-          byId("segmentMotionCompare").innerHTML = `<div class="empty-note">No health tech or incumbent rows in the current filter.</div>`;
+          byId(targetId).innerHTML = `<div class="empty-note">No health tech or incumbent rows in the current filter.</div>`;
           return;
         }
-        byId("segmentMotionCompare").innerHTML = `
+        byId(targetId).innerHTML = `
           <div class="heatmap-row heatmap-head">
             <div>Strategic motion</div>
             <div>Health tech n=${fmtInt(healthTechRows.length)}</div>
@@ -1703,8 +2050,8 @@
             .join("")}`;
       }
 
-      function renderRollupChart(rows) {
-        const canvas = byId("rollupChart");
+      function renderRollupChart(rows, targetId = "rollupChart") {
+        const canvas = byId(targetId);
         const ctx = canvas.getContext("2d");
         const dpr = window.devicePixelRatio || 1;
         const rect = canvas.getBoundingClientRect();
@@ -1786,8 +2133,8 @@
         return palette[label] || colors[4];
       }
 
-      function renderSankey(rows) {
-        const chart = byId("sankeyChart");
+      function renderSankey(rows, targetId = "sankeyChart") {
+        const chart = byId(targetId);
         const flowsByKey = new Map();
         const motionSourceRows = rows.filter((row) => row.strategicMotionPrimary);
         for (const row of motionSourceRows) {
@@ -1892,11 +2239,11 @@
         </svg>`;
       }
 
-      function renderAiPanel(rows) {
+      function renderAiPanel(rows, noteId = "aiNote", barsId = "aiBuyerBars") {
         const aiRows = rows.filter((row) => row.aiMentioned);
         const pct = rows.length ? Math.round((aiRows.length / rows.length) * 100) : 0;
-        byId("aiNote").textContent = `${fmtInt(aiRows.length)} of ${fmtInt(rows.length)} filtered rows (${pct}%) explicitly mention AI, artificial intelligence, ML, LLMs, or generative AI.`;
-        renderBars("aiBuyerBars", countBy(aiRows, "acquirerCategory").slice(0, 6), colors[1]);
+        byId(noteId).textContent = `${fmtInt(aiRows.length)} of ${fmtInt(rows.length)} filtered rows (${pct}%) explicitly mention AI, artificial intelligence, ML, LLMs, or generative AI.`;
+        renderBars(barsId, countBy(aiRows, "acquirerCategory").slice(0, 6), colors[1]);
       }
 
       function knownOnly(entries) {
@@ -1911,6 +2258,475 @@
         renderBars("buyerCountryBars", knownOnly(countBy(rows, "buyerCountry")).slice(0, 12), colors[0]);
         renderBars("geoPairBars", countBy(rows, "geoPairStatus").slice(0, 6), colors[2]);
         renderBars("geoRouteBars", knownOnly(countBy(rows, "geoRoute")).slice(0, 10), colors[3]);
+      }
+
+      function renderMotionPrimaryBars(rows, targetId = "motionPrimaryBars") {
+        renderBars(targetId, countMotion(rows, "strategicMotionPrimary", { includeBlankAsOther: true }), colors[0]);
+      }
+
+      function renderAcquiredGeo(rows, regionId = "modalAcquiredRegionBars", countryId = "modalAcquiredCountryBars") {
+        renderBars(regionId, countBy(rows, "acquiredRegion").slice(0, 8), colors[3]);
+        renderBars(countryId, countBy(rows, "acquiredCountry").slice(0, 10), colors[1]);
+      }
+
+      function renderBuyerGeo(rows, noteId = "modalBuyerGeoNote", barsId = "modalBuyerCountryBars") {
+        const buyerKnown = rows.filter((row) => row.buyerCountry);
+        byId(noteId).textContent = `${fmtInt(buyerKnown.length)} of ${fmtInt(rows.length)} filtered rows have buyer HQ country. The rest stay visible as unknown rather than inferred.`;
+        renderBars(barsId, knownOnly(countBy(rows, "buyerCountry")).slice(0, 12), colors[0]);
+      }
+
+      function renderCrossBorder(rows, pairId = "modalGeoPairBars", routeId = "modalGeoRouteBars") {
+        renderBars(pairId, countBy(rows, "geoPairStatus").slice(0, 6), colors[2]);
+        renderBars(routeId, knownOnly(countBy(rows, "geoRoute")).slice(0, 10), colors[3]);
+      }
+
+      const modalCharts = {
+        rollup: {
+          title: "Buyer Segment Mix",
+          preferredSize: "article-square",
+          markup: `<div class="canvas-wrap"><canvas id="modalRollupChart" width="1100" height="680" aria-label="Buyer segment mix chart"></canvas></div>`,
+          render: (rows) => renderRollupChart(rows, "modalRollupChart"),
+        },
+        motionComparison: {
+          title: "Primary vs Secondary Rationale",
+          markup: `<div id="modalMotionComparisonBars" class="comparison-chart"></div>`,
+          render: (rows) => renderMotionComparison(rows, "modalMotionComparisonBars"),
+        },
+        segmentCompare: {
+          title: "Health Tech vs Incumbent",
+          markup: `<div class="matrix-note" id="modalSegmentCompareNote"></div><div id="modalSegmentMotionCompare" class="comparison-chart"></div>`,
+          render: (rows) => renderSegmentMotionCompare(rows, "modalSegmentCompareNote", "modalSegmentMotionCompare"),
+        },
+        sankey: {
+          title: "Buyer Segment to Primary Strategic Motion",
+          preferredSize: "article-tall",
+          markup: `<div id="modalSankeyChart" class="sankey-chart"></div>`,
+          render: (rows) => renderSankey(rows, "modalSankeyChart"),
+        },
+        ai: {
+          title: "AI Mention Analysis",
+          markup: `<div class="matrix-note" id="modalAiNote"></div><div class="bar-section"><div id="modalAiBuyerBars" class="bars"></div></div>`,
+          render: (rows) => renderAiPanel(rows, "modalAiNote", "modalAiBuyerBars"),
+        },
+        types: {
+          title: "Acquirer Types",
+          markup: `<div id="modalTypeBars" class="bars"></div>`,
+          render: (rows) => renderBars("modalTypeBars", countBy(rows, "acquirerType").slice(0, 12), colors[0]),
+        },
+        motionPrimaryBars: {
+          title: "Primary Rationale by Motion",
+          markup: `<div id="modalMotionPrimaryBars" class="bars"></div>`,
+          render: (rows) => renderMotionPrimaryBars(rows, "modalMotionPrimaryBars"),
+        },
+        acquiredGeo: {
+          title: "Acquired Company HQ",
+          markup: `<div class="bar-columns"><div><div class="matrix-note">Regions</div><div id="modalAcquiredRegionBars" class="bars"></div></div><div><div class="matrix-note">Top countries</div><div id="modalAcquiredCountryBars" class="bars"></div></div></div>`,
+          render: (rows) => renderAcquiredGeo(rows),
+        },
+        buyerGeo: {
+          title: "Buyer HQ",
+          markup: `<div class="matrix-note" id="modalBuyerGeoNote"></div><div id="modalBuyerCountryBars" class="bars"></div>`,
+          render: (rows) => renderBuyerGeo(rows),
+        },
+        crossBorder: {
+          title: "Cross-Border View",
+          markup: `<div class="bar-columns"><div><div class="matrix-note">Buyer HQ vs. acquired HQ</div><div id="modalGeoPairBars" class="bars"></div></div><div><div class="matrix-note">Top regional routes</div><div id="modalGeoRouteBars" class="bars"></div></div></div>`,
+          render: (rows) => renderCrossBorder(rows),
+        },
+      };
+
+      function svgEscape(value) {
+        return String(value ?? "")
+          .replaceAll("&", "&amp;")
+          .replaceAll("<", "&lt;")
+          .replaceAll(">", "&gt;")
+          .replaceAll('"', "&quot;")
+          .replaceAll("'", "&apos;");
+      }
+
+      function slugify(value) {
+        return String(value || "aytza-chart")
+          .toLowerCase()
+          .replaceAll("&", "and")
+          .replace(/[^a-z0-9]+/g, "-")
+          .replace(/^-+|-+$/g, "")
+          .slice(0, 80) || "aytza-chart";
+      }
+
+      function wrapText(value, maxChars, maxLines = 2) {
+        const text = String(value || "").replace(/\s+/g, " ").trim();
+        if (!text) return [];
+        const words = text.split(" ");
+        const lines = [];
+        let current = "";
+        for (const word of words) {
+          const next = current ? `${current} ${word}` : word;
+          if (next.length <= maxChars || !current) {
+            current = next;
+            continue;
+          }
+          lines.push(current);
+          current = word;
+          if (lines.length === maxLines) break;
+        }
+        if (current && lines.length < maxLines) lines.push(current);
+        if (words.join(" ").length > lines.join(" ").length && lines.length) {
+          lines[lines.length - 1] = `${lines[lines.length - 1].replace(/\.+$/, "")}...`;
+        }
+        return lines;
+      }
+
+      function svgTextLines(value, x, y, options = {}) {
+        const {
+          maxChars = 42,
+          maxLines = 2,
+          lineHeight = 20,
+          fontSize = 16,
+          fontWeight = 400,
+          fill = "#000",
+          anchor = "start",
+          family = "Arial, sans-serif",
+        } = options;
+        return wrapText(value, maxChars, maxLines)
+          .map((line, index) => `<text x="${x}" y="${y + index * lineHeight}" text-anchor="${anchor}" font-family="${family}" font-size="${fontSize}" font-weight="${fontWeight}" fill="${fill}">${svgEscape(line)}</text>`)
+          .join("");
+      }
+
+      function fitBox(sourceWidth, sourceHeight, area) {
+        const scale = Math.min(area.width / sourceWidth, area.height / sourceHeight);
+        const width = sourceWidth * scale;
+        const height = sourceHeight * scale;
+        return {
+          x: area.x + (area.width - width) / 2,
+          y: area.y + (area.height - height) / 2,
+          width,
+          height,
+        };
+      }
+
+      function exportFilterSummary() {
+        const rows = filteredRows();
+        const filters = [];
+        if (state.rollup !== "all") filters.push(`Buyer segment: ${state.rollup}`);
+        if (state.type !== "all") filters.push(`Acquirer type: ${state.type}`);
+        if (state.source !== "all") filters.push(`Source: ${state.source}`);
+        if (state.ai !== "all") filters.push(state.ai === "yes" ? "AI mentioned" : "No AI mention");
+        if (state.acquiredRegion !== "all") filters.push(`Acquired HQ: ${state.acquiredRegion}`);
+        if (state.geo !== "all") filters.push(`Geo pair: ${state.geo}`);
+        if (state.qa !== "all") filters.push(state.qa === "flagged" ? "QA flagged" : "No QA flag");
+        return `${fmtInt(rows.length)} of ${fmtInt(allRows.length)} deals | ${filters.join(" | ") || "All rows"}`;
+      }
+
+      function getExportOptions() {
+        const size = exportSizes[byId("exportSize").value] || exportSizes["article-wide"];
+        const backgroundKey = byId("exportBackground").value;
+        return {
+          ...size,
+          backgroundKey,
+          background: exportBackgrounds[backgroundKey] || exportBackgrounds.cream,
+          format: byId("exportFormat").value || "png",
+        };
+      }
+
+      function setExportStatus(message) {
+        byId("exportStatus").textContent = message || "";
+      }
+
+      function renderActiveModalChart() {
+        const config = modalCharts[activeModalChartKey];
+        const source = byId("exportSource");
+        if (!config || !source) return;
+        config.render(filteredRows());
+        window.requestAnimationFrame(updateComposedExportPreview);
+      }
+
+      function updateExportPreview() {
+        const artboard = byId("exportPreviewArtboard");
+        if (!artboard) return;
+        const options = getExportOptions();
+        const previewWidth = Math.min(options.width, 1280);
+        const previewHeight = Math.min(options.height, 980);
+        artboard.style.setProperty("--export-preview-width", `${previewWidth}px`);
+        artboard.style.setProperty("--export-preview-height", `${previewHeight}px`);
+        artboard.style.setProperty("--export-preview-aspect", `${options.width} / ${options.height}`);
+        artboard.style.setProperty("--export-preview-bg", options.background === "transparent" ? "#fff" : options.background);
+        artboard.classList.toggle("transparent-preview", options.backgroundKey === "transparent");
+        setExportStatus(`Previewing ${options.label}: ${fmtInt(options.width)} x ${fmtInt(options.height)} ${options.format.toUpperCase()}.`);
+        updateComposedExportPreview();
+      }
+
+      function updateComposedExportPreview() {
+        const preview = byId("exportPreviewCanvas");
+        const source = byId("exportSource");
+        if (!preview || !source || !activeModalChartKey) return;
+        const chart = buildExpandedChartSvg(source);
+        preview.innerHTML = chart.svg;
+      }
+
+      function drawFooter(width, height) {
+        const footer = `Source: Aytza analysis, Dashboard_Data live sheet | ${new Date().toLocaleDateString()}`;
+        return `<text x="56" y="${height - 28}" font-family="Arial, sans-serif" font-size="13" fill="#616161">${svgEscape(footer)}</text>`;
+      }
+
+      function extractBarRows(source) {
+        return Array.from(source.querySelectorAll(".bar-row")).map((row) => {
+          const valueText = row.querySelector(".bar-value")?.textContent.trim() || "0";
+          const number = Number(valueText.replace(/[^0-9.-]/g, ""));
+          const fill = row.querySelector(".bar-fill");
+          return {
+            label: row.querySelector(".bar-label")?.textContent.trim() || "",
+            displayValue: valueText,
+            value: Number.isFinite(number) ? number : 0,
+            color: fill ? getComputedStyle(fill).backgroundColor : colors[0],
+          };
+        });
+      }
+
+      function extractBarGroups(container) {
+        const columns = container.querySelector(".bar-columns");
+        if (columns) {
+          return Array.from(columns.children)
+            .map((section) => ({
+              title: section.querySelector(".matrix-note")?.textContent.trim() || "",
+              note: "",
+              rows: extractBarRows(section),
+            }))
+            .filter((group) => group.rows.length);
+        }
+        const note = container.querySelector(".matrix-note")?.textContent.trim() || "";
+        return [{ title: "", note, rows: extractBarRows(container) }].filter((group) => group.rows.length);
+      }
+
+      function renderBarGroupExport(group, area) {
+        const parts = [];
+        let y = area.y + 4;
+        if (group.title) {
+          parts.push(svgTextLines(group.title, area.x, y + 18, { maxChars: Math.floor(area.width / 10), maxLines: 1, fontSize: 18, fontWeight: 800, family: "Outfit, Arial, sans-serif" }));
+          y += 34;
+        }
+        if (group.note) {
+          const noteLines = wrapText(group.note, Math.max(36, Math.floor(area.width / 8.2)), 3);
+          parts.push(noteLines.map((line, index) => `<text x="${area.x}" y="${y + 16 + index * 18}" font-family="Arial, sans-serif" font-size="14" fill="#616161">${svgEscape(line)}</text>`).join(""));
+          y += noteLines.length * 18 + 18;
+        }
+        const maxValue = Math.max(1, ...group.rows.map((row) => row.value));
+        const rowGap = 8;
+        const rowHeight = Math.min(36, Math.max(22, (area.y + area.height - y - rowGap * (group.rows.length - 1)) / Math.max(1, group.rows.length)));
+        const labelWidth = Math.min(300, Math.max(150, area.width * 0.31));
+        const valueWidth = 62;
+        const trackX = area.x + labelWidth + 18;
+        const trackWidth = Math.max(80, area.width - labelWidth - valueWidth - 34);
+        const labelChars = Math.max(16, Math.floor(labelWidth / 7.2));
+        group.rows.forEach((row, index) => {
+          const rowY = y + index * (rowHeight + rowGap);
+          const centerY = rowY + rowHeight / 2 + 5;
+          const trackY = rowY + rowHeight / 2 - 5;
+          const barWidth = Math.max(2, (row.value / maxValue) * trackWidth);
+          parts.push(`<text x="${area.x}" y="${centerY}" font-family="Arial, sans-serif" font-size="15" fill="#000">${svgEscape(shortLabel(row.label, labelChars))}</text>`);
+          parts.push(`<rect x="${trackX}" y="${trackY}" width="${trackWidth}" height="10" rx="5" fill="#f1f0ee"></rect>`);
+          parts.push(`<rect x="${trackX}" y="${trackY}" width="${barWidth}" height="10" rx="5" fill="${row.color}"></rect>`);
+          parts.push(`<text x="${area.x + area.width}" y="${centerY}" text-anchor="end" font-family="Arial, sans-serif" font-size="15" fill="#616161">${svgEscape(row.displayValue)}</text>`);
+        });
+        return parts.join("");
+      }
+
+      function renderBarsExport(container, area) {
+        const groups = extractBarGroups(container);
+        if (!groups.length) return "";
+        const columns = groups.length > 1 && area.width >= 850 ? 2 : 1;
+        const rows = Math.ceil(groups.length / columns);
+        const gap = 34;
+        const groupWidth = (area.width - gap * (columns - 1)) / columns;
+        const groupHeight = (area.height - gap * (rows - 1)) / rows;
+        return groups
+          .map((group, index) => {
+            const column = index % columns;
+            const row = Math.floor(index / columns);
+            const groupArea = {
+              x: area.x + column * (groupWidth + gap),
+              y: area.y + row * (groupHeight + gap),
+              width: groupWidth,
+              height: groupHeight,
+            };
+            return renderBarGroupExport(group, groupArea);
+          })
+          .join("");
+      }
+
+      function renderHeatmapExport(container, area) {
+        const heads = Array.from(container.querySelectorAll(".heatmap-head > div")).map((node) => node.textContent.trim());
+        const rows = Array.from(container.querySelectorAll(".heatmap-row"))
+          .filter((row) => !row.classList.contains("heatmap-head"))
+          .map((row) => ({
+            label: row.querySelector(".heatmap-label")?.textContent.trim() || "",
+            cells: Array.from(row.querySelectorAll(".heatmap-cell")).map((cell) => {
+              const style = getComputedStyle(cell);
+              return {
+                value: cell.querySelector(".heatmap-value")?.textContent.trim() || "",
+                sub: cell.querySelector(".heatmap-sub")?.textContent.trim() || "",
+                fill: style.backgroundColor || "#fff",
+                stroke: style.borderColor || "rgba(30, 21, 3, 0.16)",
+              };
+            }),
+          }));
+        if (!rows.length) return "";
+        const firstCol = area.width * 0.34;
+        const cellWidth = (area.width - firstCol - 18) / Math.max(1, heads.length - 1);
+        const headerHeight = 42;
+        const rowGap = 7;
+        const rowHeight = Math.min(82, Math.max(54, (area.height - headerHeight - rowGap * (rows.length - 1)) / rows.length));
+        const parts = [];
+        heads.forEach((head, index) => {
+          const x = index === 0 ? area.x : area.x + firstCol + 18 + (index - 1) * cellWidth;
+          parts.push(svgTextLines(head, x + (index === 0 ? 0 : 8), area.y + 18, { maxChars: index === 0 ? 28 : 18, maxLines: 2, lineHeight: 14, fontSize: 12, fontWeight: 800, fill: "#616161" }));
+        });
+        rows.forEach((row, rowIndex) => {
+          const y = area.y + headerHeight + rowIndex * (rowHeight + rowGap);
+          parts.push(`<line x1="${area.x}" y1="${y}" x2="${area.x + firstCol - 8}" y2="${y}" stroke="#1e1503" stroke-width="1"></line>`);
+          parts.push(svgTextLines(row.label, area.x, y + 24, { maxChars: Math.max(18, Math.floor(firstCol / 8)), maxLines: 2, lineHeight: 17, fontSize: 15, fontWeight: 800 }));
+          row.cells.forEach((cell, cellIndex) => {
+            const x = area.x + firstCol + 18 + cellIndex * cellWidth;
+            const rectWidth = cellWidth - 8;
+            parts.push(`<rect x="${x}" y="${y}" width="${rectWidth}" height="${rowHeight}" fill="${cell.fill}" stroke="${cell.stroke}"></rect>`);
+            parts.push(`<text x="${x + 10}" y="${y + 29}" font-family="Outfit, Arial, sans-serif" font-size="19" font-weight="800" fill="#1e1503">${svgEscape(cell.value)}</text>`);
+            parts.push(svgTextLines(cell.sub, x + 10, y + 50, { maxChars: Math.max(12, Math.floor(rectWidth / 7)), maxLines: 2, lineHeight: 14, fontSize: 12, fill: "#616161" }));
+          });
+        });
+        return parts.join("");
+      }
+
+      function renderNestedSvgExport(container, area) {
+        const svg = container.querySelector("svg");
+        if (!svg) return "";
+        const viewBox = (svg.getAttribute("viewBox") || "0 0 900 760").split(/\s+/).map(Number);
+        const sourceWidth = viewBox[2] || 900;
+        const sourceHeight = viewBox[3] || 760;
+        const fit = fitBox(sourceWidth, sourceHeight, area);
+        fit.y = area.y;
+        return `<svg x="${fit.x}" y="${fit.y}" width="${fit.width}" height="${fit.height}" viewBox="${viewBox.join(" ")}">${svg.innerHTML}</svg>`;
+      }
+
+      function renderCanvasExport(container, area) {
+        const canvas = container.querySelector("canvas");
+        if (!canvas) return "";
+        const fit = fitBox(canvas.width, canvas.height, area);
+        return `<image x="${fit.x}" y="${fit.y}" width="${fit.width}" height="${fit.height}" href="${canvas.toDataURL("image/png")}" preserveAspectRatio="xMidYMid meet"></image>`;
+      }
+
+      function buildExpandedChartSvg(source) {
+        const options = getExportOptions();
+        const title = byId("chartModalTitle").textContent.trim() || "Aytza chart";
+        const chartSource = source || byId("exportSource") || byId("chartModalBody");
+        const width = options.width;
+        const height = options.height;
+        const margin = 56;
+        const parts = [`<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">`];
+        if (options.background !== "transparent") parts.push(`<rect width="${width}" height="${height}" fill="${options.background}"></rect>`);
+        parts.push(`<rect x="0" y="0" width="${width}" height="14" fill="#f2a51b"></rect>`);
+        parts.push(`<text x="${margin}" y="50" font-family="Outfit, Arial, sans-serif" font-size="24" font-weight="800" fill="#6d275d">Aytza</text>`);
+        const titleLines = wrapText(title, Math.max(26, Math.floor((width - margin * 2) / 18)), 2);
+        titleLines.forEach((line, index) => {
+          parts.push(`<text x="${margin}" y="${92 + index * 40}" font-family="Outfit, Arial, sans-serif" font-size="34" font-weight="800" fill="#000">${svgEscape(line)}</text>`);
+        });
+        const subtitleY = 112 + titleLines.length * 40;
+        parts.push(svgTextLines(exportFilterSummary(), margin, subtitleY, { maxChars: Math.max(40, Math.floor((width - margin * 2) / 8)), maxLines: 2, lineHeight: 20, fontSize: 15, fill: "#616161" }));
+        const chartY = subtitleY + 42;
+        const chartArea = { x: margin, y: chartY, width: width - margin * 2, height: Math.max(180, height - chartY - 82) };
+        if (chartSource.querySelector("canvas")) {
+          parts.push(renderCanvasExport(chartSource, chartArea));
+        } else if (chartSource.querySelector(".heatmap-row")) {
+          parts.push(renderHeatmapExport(chartSource, chartArea));
+        } else if (chartSource.querySelector("svg")) {
+          parts.push(renderNestedSvgExport(chartSource, chartArea));
+        } else {
+          parts.push(renderBarsExport(chartSource, chartArea));
+        }
+        parts.push(drawFooter(width, height));
+        parts.push("</svg>");
+        return { svg: parts.join(""), width, height, title, format: options.format };
+      }
+
+      function downloadBlob(blob, filename) {
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = filename;
+        document.body.appendChild(link);
+        link.click();
+        link.remove();
+        window.setTimeout(() => URL.revokeObjectURL(url), 1000);
+      }
+
+      function svgToPngBlob(svg, width, height) {
+        return new Promise((resolve, reject) => {
+          const image = new Image();
+          const svgBlob = new Blob([svg], { type: "image/svg+xml;charset=utf-8" });
+          const url = URL.createObjectURL(svgBlob);
+          image.onload = () => {
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+            const context = canvas.getContext("2d");
+            context.drawImage(image, 0, 0, width, height);
+            URL.revokeObjectURL(url);
+            canvas.toBlob((blob) => {
+              if (blob) resolve(blob);
+              else reject(new Error("PNG export failed."));
+            }, "image/png");
+          };
+          image.onerror = () => {
+            URL.revokeObjectURL(url);
+            reject(new Error("Could not render chart export."));
+          };
+          image.src = url;
+        });
+      }
+
+      async function downloadExpandedChart() {
+        if (!activeModalChartKey) return;
+        try {
+          setExportStatus("Preparing chart export...");
+          const chart = buildExpandedChartSvg();
+          const sizeKey = byId("exportSize").value;
+          const filename = `${slugify(chart.title)}-${sizeKey}.${chart.format}`;
+          if (chart.format === "svg") {
+            downloadBlob(new Blob([chart.svg], { type: "image/svg+xml;charset=utf-8" }), filename);
+          } else {
+            const blob = await svgToPngBlob(chart.svg, chart.width, chart.height);
+            downloadBlob(blob, filename);
+          }
+          setExportStatus(`Downloaded ${chart.format.toUpperCase()} (${fmtInt(chart.width)} x ${fmtInt(chart.height)}).`);
+        } catch (error) {
+          console.error(error);
+          setExportStatus(`Export failed: ${error.message}`);
+        }
+      }
+
+      function openChartModal(chartKey) {
+        const config = modalCharts[chartKey];
+        if (!config) return;
+        activeModalChartKey = chartKey;
+        const modal = byId("chartModal");
+        byId("chartModalTitle").textContent = config.title;
+        byId("exportSize").value = config.preferredSize || "article-wide";
+        byId("exportBackground").value = "cream";
+        byId("exportFormat").value = "png";
+        byId("chartModalBody").innerHTML = `<div class="export-preview-artboard" id="exportPreviewArtboard"><div class="export-preview-canvas" id="exportPreviewCanvas"></div></div><div class="export-source" id="exportSource">${config.markup}</div>`;
+        modal.classList.add("open");
+        document.body.classList.add("modal-open");
+        config.render(filteredRows());
+        updateExportPreview();
+        byId("chartModalClose").focus();
+      }
+
+      function closeChartModal() {
+        const modal = byId("chartModal");
+        if (!modal.classList.contains("open")) return;
+        modal.classList.remove("open");
+        document.body.classList.remove("modal-open");
+        byId("chartModalBody").innerHTML = "";
+        activeModalChartKey = "";
+        setExportStatus("");
       }
 
       function renderMotionMatrix(rows) {
